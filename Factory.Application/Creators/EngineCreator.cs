@@ -2,20 +2,13 @@
 
 namespace Factory.Core.Creators
 {
-    public class EngineCreator : IDetailsCreator
+    public class EngineCreator : BaseCreator<Engine>, IDetailsCreator<Engine>
     {
-        private DetailsMediator<Engine> _detailsMediator;
-
-        public EngineCreator(DetailsMediator<Engine> detailsMediator)
-        {
-            _detailsMediator = detailsMediator;
-        }
-
         public void Create()
         {
             var engine = new Engine(Guid.NewGuid());
 
-            Task.Delay(1);
+            Thread.Sleep(2000);
 
             _detailsMediator.Notify(engine, EventType.DetailCreated);
         }

@@ -1,51 +1,95 @@
-﻿using Factory.Core.Warehouse;
+﻿using Factory.Core.Mediators;
+using Factory.Core.Warehouse;
 
 namespace Factory.Core.Buiders
 {
     public class CarBuilder : ICarBuilder
     {
-        private Car _car;
         private DetailsWarehouse<Body> _bodyWarehouse;
         private DetailsWarehouse<Engine> _engineWarehouse;
         private DetailsWarehouse<Accessories> _accessoriesWarehouse;
+        private CarMediator _carMediator;
 
-        public CarBuilder()
+        private Engine _engine;
+        private Body _body;
+        private Accessories _accessories;
+
+        public CarBuilder(
+            EngineWarehouse engineWarehouse,
+            BodyWarehouse bodyWarehouse,
+            AccessoriesWarehouse accessoriesWarehouse,
+            CarMediator carMediator = null
+            )
         {
-            _car = new Car();
-            _bodyWarehouse = new DetailsWarehouse<Body>(1);
-            _engineWarehouse = new DetailsWarehouse<Engine>(1);
-            _accessoriesWarehouse = new DetailsWarehouse<Accessories>(1);
+            _carMediator = carMediator;
+
+            _engineWarehouse = engineWarehouse;
+            _bodyWarehouse = bodyWarehouse;
+            _accessoriesWarehouse = accessoriesWarehouse;
         }
 
         public void Reset()
         {
-            _car = new Car();
+            Console.WriteLine($"Reset");
+
+            _accessories = null;
+            _engine = null;
+            _body = null;
         }
 
-        public void BuildEngine()
+        public void PassEngine(Engine engine)
         {
-            _car.AddEngine(_engineWarehouse.GetDetail());
+            Console.WriteLine($"Pass Engine");
+
+            _engine = engine;
+            CheckCarStatus();
         }
 
-        public void BuildBody()
+        public void PassBody(Body body)
         {
-            _car.AddBody(_bodyWarehouse.GetDetail());
+            Console.WriteLine($"Pass Body");
+
+            _body = body;
+            CheckCarStatus();
         }
 
-        public void BuildAccessories()
+        public void PassAccessories(Accessories accessories)
         {
-            _car.AddAccessories(_accessoriesWarehouse.GetDetail());
+            Console.WriteLine($"Pass Accessories");
+
+            _accessories = accessories;
+            CheckCarStatus();
         }
 
-        public Car BuildCar()
+        private void CheckCarStatus()
         {
             //TODO: ThreadPool
 
-            BuildEngine();
-            BuildBody();
-            BuildAccessories();
+            if (_engine is not null
+                && _body is not null
+                && _accessories is not null
+            )
+            {
+                var car = new Car(_engine, _body, _accessories);
+                Reset();
 
-            return _car;
+                Thread.Sleep(1000);
+
+                _carMediator.Notify(car, CarEventType.CarCreated);
+            }
+        }
+
+        public void MakeOrder()
+        {
+            Console.WriteLine($"Car: make order");
+
+            _engineWarehouse.MakeOrder(this);
+            _bodyWarehouse.MakeOrder(this);
+            _accessoriesWarehouse.MakeOrder(this);
+        }
+        public void SetMediator(CarMediator carMediator)
+        {
+            _carMediator = carMediator;
         }
     }
 }

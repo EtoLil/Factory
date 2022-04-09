@@ -1,7 +1,11 @@
-﻿namespace Factory.Core.Creators
+﻿using Factory.Core.Mediators;
+
+namespace Factory.Core.Creators
 {
-    public interface IDetailsCreator
+    public interface IDetailsCreator<T>
+        where T : IDetails
     {
         void Create();
+        void SetMediator(DetailsMediator<T> detailsMediator);
     }
 }

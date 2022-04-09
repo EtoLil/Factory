@@ -1,15 +1,16 @@
-﻿namespace Factory.Core.Creators
+﻿using Factory.Core.Mediators;
+
+namespace Factory.Core.Creators
 {
-    public class BodyCreator : IDetailsCreator
+    public class BodyCreator : BaseCreator<Body>, IDetailsCreator<Body>
     {
-        public IDetails Create()
+        public void Create()
         {
-            return new Body(Guid.NewGuid());
-        }
+            var body = new Body(Guid.NewGuid());
 
-        public void Stop()
-        {
+            Thread.Sleep(1000);
 
+            _detailsMediator.Notify(body, EventType.DetailCreated);
         }
     }
 }

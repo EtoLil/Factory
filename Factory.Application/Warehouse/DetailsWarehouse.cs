@@ -1,51 +1,85 @@
-﻿namespace Factory.Core.Warehouse
+﻿using Factory.Core.Buiders;
+using Factory.Core.Mediators;
+
+namespace Factory.Core.Warehouse
 {
-    public class DetailsWarehouse<T> : IDetailsWarehouse<T>
+    public abstract class DetailsWarehouse<T> : IDetailsWarehouse<T>
         where T : IDetails
     {
-        private readonly uint _capacity;
-        public IList<T> Details { get; set; }
+        protected readonly uint _capacity;
 
-        public DetailsWarehouse(uint capcity)
+        protected DetailsMediator<T> _detailsMediator;
+        protected Queue<T> Details { get; set; }
+        protected Queue<CarBuilder> CarBuilders { get; set; }
+
+        public DetailsWarehouse(uint capcity, DetailsMediator<T> detailsMediator = null)
         {
             _capacity = capcity;
-            Details = new List<T>();
+            _detailsMediator = detailsMediator;
+            Details = new Queue<T>();
+            CarBuilders = new Queue<CarBuilder>();
         }
 
-        public T GetDetail()
+        public abstract void MakeOrder(CarBuilder carBuilder);
+
+        public abstract void AddDetail(T detail);
+
+        public void SetMediator(DetailsMediator<T> detailsMediator)
         {
-            return Details.First();
-        }
-
-        public void AddDetail(T detail)
-        {
-            Details.Add(detail);
-
-            if (Details.Count() == _capacity)
-            {
-
-            }
-        }
-    }
-
-    public class EngineWarehouse : DetailsWarehouse<Engine>
-    {
-        public EngineWarehouse(uint capcity) : base(capcity)
-        {
-        }
-    }
-
-    public class BodyWarehouse : DetailsWarehouse<Body>
-    {
-        public BodyWarehouse(uint capcity) : base(capcity)
-        {
+            _detailsMediator = detailsMediator;
         }
     }
 
     public class AccessoriesWarehouse : DetailsWarehouse<Accessories>
     {
-        public AccessoriesWarehouse(uint capcity) : base(capcity)
+        public AccessoriesWarehouse(uint capcity, DetailsMediator<Accessories> detailsMediator = null)
+            : base(capcity, detailsMediator)
         {
+        }
+
+        public override void MakeOrder(CarBuilder carBuilder)
+        {
+            if (Details.Count > 0)
+            {
+                Console.WriteLine($"Warehouse has accessories");
+
+                carBuilder.PassAccessories(Details.Dequeue());
+                return;
+            }
+
+            CarBuilders.Enqueue(carBuilder);
+            Console.WriteLine($"Warehouse has no accessories");
+        }
+
+        public override void AddDetail(Accessories detail)
+        {
+            if (CarBuilders.Count != 0)
+            {
+                var carBuilder = CarBuilders.Dequeue();
+
+                carBuilder.PassAccessories(detail);
+            }
+            else
+            {
+                Details.Enqueue(detail);
+            }
+
+            if (Details.Count() < _capacity)
+            {
+                _detailsMediator.Notify(null, EventType.WarehouseNotFull);
+            }
+            else
+            {
+                Console.WriteLine($"AccessoriesWarehouse Full");
+            }
+        }
+
+        public void Start()
+        {
+            if (Details.Count() < _capacity)
+            {
+                _detailsMediator.Notify(null, EventType.WarehouseNotFull);
+            }
         }
     }
 }

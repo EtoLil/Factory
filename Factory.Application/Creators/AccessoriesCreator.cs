@@ -1,15 +1,16 @@
-﻿namespace Factory.Core.Creators
+﻿using Factory.Core.Mediators;
+
+namespace Factory.Core.Creators
 {
-    public class AccessoriesCreator : IDetailsCreator
+    public class AccessoriesCreator : BaseCreator<Accessories>, IDetailsCreator<Accessories>
     {
-        public IDetails Create()
+        public void Create()
         {
-            return new Accessories(Guid.NewGuid());
-        }
+            var accessories = new Accessories(Guid.NewGuid());
 
-        public void Stop()
-        {
+            Thread.Sleep(3000);
 
+            _detailsMediator.Notify(accessories, EventType.DetailCreated);
         }
     }
 }

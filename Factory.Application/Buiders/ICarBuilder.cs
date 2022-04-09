@@ -2,8 +2,9 @@
 {
     public interface ICarBuilder
     {
-        void BuildEngine();
-        void BuildBody();
-        void BuildAccessories();
+        void PassEngine(Engine engine);
+        void PassBody(Body body);
+        void PassAccessories(Accessories accessories);
+        void MakeOrder();
     }
 }

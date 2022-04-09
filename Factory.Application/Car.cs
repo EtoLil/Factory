@@ -6,19 +6,16 @@
         public Body Body { get; private set; }
         public Accessories Accessories { get; private set; }
 
-        public void AddEngine(Engine engine)
+        public Car(Engine engine, Body body, Accessories accessories)
         {
             Engine = engine;
-        }
-
-        public void AddBody(Body body)
-        {
             Body = body;
+            Accessories = accessories;
         }
 
-        public void AddAccessories(Accessories accessories)
+        public override string ToString()
         {
-            Accessories = accessories;
+            return $"Car - Engine: {Engine.Id }; Body: {Body.Id }; Accessories: {Accessories.Id };";
         }
     }
 }

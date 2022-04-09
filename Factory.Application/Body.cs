@@ -2,6 +2,6 @@
 {
     public class Body : Details
     {
-        public Body(Guid шd) : base(id) { }
+        public Body(Guid id) : base(id) { }
     }
 }

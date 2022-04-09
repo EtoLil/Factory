@@ -8,23 +8,29 @@ namespace Factory.Core.Mediators
     {
         private IDetailsWarehouse<T> _detailsWarehouse;
 
-        private IDetailsCreator _detailsCreator;
+        private IDetailsCreator<T> _detailsCreator;
 
-        public DetailsMediator(IDetailsWarehouse<T> detailsWarehouse, IDetailsCreator detailsCreator)
+        public DetailsMediator(IDetailsWarehouse<T> detailsWarehouse, IDetailsCreator<T> detailsCreator)
         {
             _detailsWarehouse = detailsWarehouse;
+            _detailsWarehouse.SetMediator(this);
             _detailsCreator = detailsCreator;
+            _detailsCreator.SetMediator(this);
         }
 
+        //TODO: Refactore
         public void Notify(T input, EventType @event)
         {
             if (@event == EventType.DetailCreated)
             {
+                Console.WriteLine($"{typeof(T).Name} Created");
                 _detailsWarehouse.AddDetail(input);
             }
 
             if (@event == EventType.WarehouseNotFull)
             {
+                Console.WriteLine($"{typeof(T).Name} warehouse not full");
+
                 _detailsCreator.Create();
             }
         }
