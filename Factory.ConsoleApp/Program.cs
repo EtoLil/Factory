@@ -24,16 +24,26 @@ var carBuilder1 = new CarBuilder(engineWarehouse, bodyWarehouse, accessoriesWare
 var carWarehouse1 = new CarWarehouse(2);
 var carMediator1 = new CarMediator(carWarehouse1, carBuilder1);
 
-var carBuilder2 = new CarBuilder(engineWarehouse, bodyWarehouse, accessoriesWarehouse);
-var carWarehouse2 = new CarWarehouse(2);
-var carMediator2 = new CarMediator(carWarehouse2, carBuilder2);
+var dealer1 = new Dealer(carWarehouse1);
+var dealer2 = new Dealer(carWarehouse1);
+var dealer3 = new Dealer(carWarehouse1);
+
 
 Task.Run(engineWarehouse.Start);
 Task.Run(bodyWarehouse.Start);
 Task.Run(accessoriesWarehouse.Start);
 
 Task.Run(carWarehouse1.Start);
-Task.Run(carWarehouse2.Start);
+
+Thread.Sleep(21000);
+
+Task.Run(dealer1.Start);
+Task.Run(dealer2.Start);
+Task.Run(dealer3.Start);
+
+Task.Run(dealer1.Start);
+Task.Run(dealer2.Start);
+Task.Run(dealer3.Start);
 
 Console.ReadLine();
 

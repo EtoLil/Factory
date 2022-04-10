@@ -23,6 +23,7 @@ namespace Factory.Core.Warehouse
                 Console.WriteLine($"Warehouse has a body");
 
                 carBuilder.PassBody(Details.Dequeue());
+                _detailsMediator.Notify(CreatingStatus.CanCreate);
                 return;
             }
 

@@ -22,6 +22,7 @@ namespace Factory.Core.Warehouse
             {
                 Console.WriteLine($"Warehouse has an engine");
                 carBuilder.PassEngine(Details.Dequeue());
+                _detailsMediator.Notify(CreatingStatus.CanCreate);
 
                 return;
             }

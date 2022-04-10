@@ -6,28 +6,63 @@ namespace Factory.Core.Warehouse
 {
     public class CarWarehouse
     {
+        private readonly object locker = new object();
+
         private readonly uint _capacity;
 
-        private IList<Car> _cars;
+        private Queue<Car> _cars;
         private CarMediator _carMediator;
+        protected Queue<Dealer> _dealers;
 
         public CarWarehouse(uint capcity, CarMediator carMediator = null)
         {
             _capacity = capcity;
             _carMediator = carMediator;
-            _cars = new List<Car>();
+            _cars = new Queue<Car>();
+            _dealers = new Queue<Dealer>();
         }
+
+        public void HandleOrder(Dealer dealer)
+        {
+            if (_cars.Count > 0)
+            {
+                lock (locker)
+                {
+                    if (_cars.Count > 0)
+                    {
+                        Console.WriteLine($"Warehouse has a car");
+
+                        dealer.TakeCar(_cars.Dequeue());
+
+                        _carMediator.Notify(CreatingStatus.CanCreate);
+                        return;
+                    }
+                    else
+                    {
+                        Console.WriteLine($"Warehouse has no car");
+                        _dealers.Enqueue(dealer);
+                    }
+                }
+            }
+            else
+            {
+                Console.WriteLine($"Warehouse has no car");
+                _dealers.Enqueue(dealer);
+            }
+        }
+
         public void AddCar(Car car)
         {
-            /*            if (CarBuilders.Count != 0)
-                        {
-                            carBuilder.BuildEngine(detail);
-                        }
-                        else
-                        {
-                        }*/
+            if (_dealers.Count != 0)
+            {
+                var dealer = _dealers.Dequeue();
 
-            _cars.Add(car);
+                dealer.TakeCar(car);
+            }
+            else
+            {
+                _cars.Enqueue(car);
+            }
 
             if (_cars.Count() < _capacity)
             {
@@ -35,10 +70,6 @@ namespace Factory.Core.Warehouse
             }
             else
             {
-                foreach (var carR in _cars)
-                {
-                    Console.WriteLine(carR.ToString());
-                }
                 Console.WriteLine($"CarWarehouse Full");
             }
         }
