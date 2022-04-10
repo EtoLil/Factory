@@ -3,7 +3,7 @@ using Factory.Core.Warehouse;
 
 namespace Factory.Core.Mediators
 {
-    public class DetailsMediator<T> : IMediator<T, EventType>
+    public class DetailsMediator<T> : IMediator<T>
         where T : IDetails
     {
         private IDetailsWarehouse<T> _detailsWarehouse;
@@ -19,26 +19,20 @@ namespace Factory.Core.Mediators
         }
 
         //TODO: Refactore
-        public void Notify(T input, EventType @event)
+        public void Notify(T input, CreatingStatus @event)
         {
-            if (@event == EventType.DetailCreated)
+            if (@event == CreatingStatus.Created)
             {
                 Console.WriteLine($"{typeof(T).Name} Created");
                 _detailsWarehouse.AddDetail(input);
             }
 
-            if (@event == EventType.WarehouseNotFull)
+            if (@event == CreatingStatus.CanCreate)
             {
                 Console.WriteLine($"{typeof(T).Name} warehouse not full");
 
                 _detailsCreator.Create();
             }
         }
-    }
-
-    public enum EventType
-    {
-        DetailCreated,
-        WarehouseNotFull
     }
 }

@@ -66,7 +66,7 @@ namespace Factory.Core.Warehouse
 
             if (Details.Count() < _capacity)
             {
-                _detailsMediator.Notify(null, EventType.WarehouseNotFull);
+                _detailsMediator.Notify(null, CreatingStatus.CanCreate);
             }
             else
             {
@@ -78,7 +78,7 @@ namespace Factory.Core.Warehouse
         {
             if (Details.Count() < _capacity)
             {
-                _detailsMediator.Notify(null, EventType.WarehouseNotFull);
+                _detailsMediator.Notify(null, CreatingStatus.CanCreate);
             }
         }
     }

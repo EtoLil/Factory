@@ -8,9 +8,9 @@ namespace Factory.Core.Creators
         {
             var body = new Body(Guid.NewGuid());
 
-            Thread.Sleep(1000);
+            Thread.Sleep(Configure.BodyCreateTime);
 
-            _detailsMediator.Notify(body, EventType.DetailCreated);
+            _detailsMediator.Notify(body, CreatingStatus.Created);
         }
     }
 }

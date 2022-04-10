@@ -1,7 +1,7 @@
 ﻿namespace Factory.Core.Mediators
 {
-    public interface IMediator<T, TEventType>
+    public interface IMediator<T>
     {
-        void Notify(T input, TEventType @event);
+        void Notify(T input, CreatingStatus @event);
     }
 }

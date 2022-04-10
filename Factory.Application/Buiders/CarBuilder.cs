@@ -70,12 +70,16 @@ namespace Factory.Core.Buiders
                 && _accessories is not null
             )
             {
+                Thread.Sleep(Configure.CarCreateTime);
                 var car = new Car(_engine, _body, _accessories);
-                Reset();
+                Reset();             
 
-                Thread.Sleep(1000);
+                Configure.CarCreateTime += 5000;
+                Configure.BodyCreateTime += 5000;
+                Configure.EngineCreateTime += 5000;
+                Configure.AccessoriesCreateTime += 5000;
 
-                _carMediator.Notify(car, CarEventType.CarCreated);
+                _carMediator.Notify(car, CreatingStatus.Created);
             }
         }
 

@@ -8,9 +8,9 @@ namespace Factory.Core.Creators
         {
             var engine = new Engine(Guid.NewGuid());
 
-            Thread.Sleep(2000);
+            Thread.Sleep(Configure.EngineCreateTime);
 
-            _detailsMediator.Notify(engine, EventType.DetailCreated);
+            _detailsMediator.Notify(engine, CreatingStatus.Created);
         }
     }
 }

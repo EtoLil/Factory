@@ -29,7 +29,7 @@ namespace Factory.Core.Warehouse
 
             if (_cars.Count() < _capacity)
             {
-                _carMediator.Notify(null, CarEventType.WarehouseNotFull);
+                _carMediator.Notify(null, CreatingStatus.CanCreate);
             }
             else
             {
@@ -45,7 +45,7 @@ namespace Factory.Core.Warehouse
         {
             if (_cars.Count() < _capacity)
             {
-                _carMediator.Notify(null, CarEventType.WarehouseNotFull);
+                _carMediator.Notify(null, CreatingStatus.CanCreate);
             }
         }
 

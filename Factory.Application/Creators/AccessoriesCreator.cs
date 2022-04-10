@@ -8,9 +8,9 @@ namespace Factory.Core.Creators
         {
             var accessories = new Accessories(Guid.NewGuid());
 
-            Thread.Sleep(3000);
+            Thread.Sleep(Configure.AccessoriesCreateTime);
 
-            _detailsMediator.Notify(accessories, EventType.DetailCreated);
+            _detailsMediator.Notify(accessories, CreatingStatus.Created);
         }
     }
 }
