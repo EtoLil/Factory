@@ -20,6 +20,7 @@ namespace Factory.Core.Warehouse
                 Console.WriteLine($"Warehouse has accessories");
 
                 carBuilder.PassAccessories(Details.Dequeue());
+                _detailsMediator.Notify(CreatingStatus.CanCreate);
                 return;
             }
 

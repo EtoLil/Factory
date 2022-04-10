@@ -38,11 +38,20 @@ Task.Run(carWarehouse1.Start);
 Thread.Sleep(21000);
 
 Task.Run(dealer1.Start);
+Thread.Sleep(100);
+
 Task.Run(dealer2.Start);
+Thread.Sleep(100);
+
 Task.Run(dealer3.Start);
+Thread.Sleep(100);
 
 Task.Run(dealer1.Start);
+Thread.Sleep(100);
+
 Task.Run(dealer2.Start);
+Thread.Sleep(100);
+
 Task.Run(dealer3.Start);
 
 Console.ReadLine();
