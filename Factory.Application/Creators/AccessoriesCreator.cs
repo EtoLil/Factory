@@ -1,16 +1,18 @@
-﻿using Factory.Core.Mediators;
+﻿using Factory.Core.Creators.Base;
+using Factory.Core.Entities;
+using Factory.Core.Enums;
 
 namespace Factory.Core.Creators
 {
-    public class AccessoriesCreator : BaseCreator<Accessories>, IDetailsCreator<Accessories>
+    public class AccessoriesCreator : BaseDetailsCreator<Accessories>
     {
-        public void Create()
+        public override void Create()
         {
-            var accessories = new Accessories(Guid.NewGuid());
+            var accessories = new Accessories();
 
             Thread.Sleep(Configure.AccessoriesCreateTime);
 
-            _detailsMediator.Notify(accessories, CreatingStatus.Created);
+            _detailsMediator.Notify(CreatingStatus.Created, accessories);
         }
     }
 }

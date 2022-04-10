@@ -1,35 +1,11 @@
 ﻿using Factory.Core.Buiders;
+using Factory.Core.Entities;
+using Factory.Core.Enums;
 using Factory.Core.Mediators;
+using Factory.Core.Warehouse.Base;
 
 namespace Factory.Core.Warehouse
 {
-    public abstract class DetailsWarehouse<T> : IDetailsWarehouse<T>
-        where T : IDetails
-    {
-        protected readonly uint _capacity;
-
-        protected DetailsMediator<T> _detailsMediator;
-        protected Queue<T> Details { get; set; }
-        protected Queue<CarBuilder> CarBuilders { get; set; }
-
-        public DetailsWarehouse(uint capcity, DetailsMediator<T> detailsMediator = null)
-        {
-            _capacity = capcity;
-            _detailsMediator = detailsMediator;
-            Details = new Queue<T>();
-            CarBuilders = new Queue<CarBuilder>();
-        }
-
-        public abstract void MakeOrder(CarBuilder carBuilder);
-
-        public abstract void AddDetail(T detail);
-
-        public void SetMediator(DetailsMediator<T> detailsMediator)
-        {
-            _detailsMediator = detailsMediator;
-        }
-    }
-
     public class AccessoriesWarehouse : DetailsWarehouse<Accessories>
     {
         public AccessoriesWarehouse(uint capcity, DetailsMediator<Accessories> detailsMediator = null)
@@ -66,7 +42,7 @@ namespace Factory.Core.Warehouse
 
             if (Details.Count() < _capacity)
             {
-                _detailsMediator.Notify(null, CreatingStatus.CanCreate);
+                _detailsMediator.Notify(CreatingStatus.CanCreate);
             }
             else
             {
@@ -78,7 +54,7 @@ namespace Factory.Core.Warehouse
         {
             if (Details.Count() < _capacity)
             {
-                _detailsMediator.Notify(null, CreatingStatus.CanCreate);
+                _detailsMediator.Notify(CreatingStatus.CanCreate);
             }
         }
     }

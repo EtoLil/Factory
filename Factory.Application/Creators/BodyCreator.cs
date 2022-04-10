@@ -1,16 +1,18 @@
-﻿using Factory.Core.Mediators;
+﻿using Factory.Core.Creators.Base;
+using Factory.Core.Entities;
+using Factory.Core.Enums;
 
 namespace Factory.Core.Creators
 {
-    public class BodyCreator : BaseCreator<Body>, IDetailsCreator<Body>
+    public class BodyCreator : BaseDetailsCreator<Body>
     {
-        public void Create()
+        public override void Create()
         {
-            var body = new Body(Guid.NewGuid());
+            var body = new Body();
 
             Thread.Sleep(Configure.BodyCreateTime);
 
-            _detailsMediator.Notify(body, CreatingStatus.Created);
+            _detailsMediator.Notify(CreatingStatus.Created, body);
         }
     }
 }

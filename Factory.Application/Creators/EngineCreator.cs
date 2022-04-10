@@ -1,16 +1,18 @@
-﻿using Factory.Core.Mediators;
+﻿using Factory.Core.Creators.Base;
+using Factory.Core.Entities;
+using Factory.Core.Enums;
 
 namespace Factory.Core.Creators
 {
-    public class EngineCreator : BaseCreator<Engine>, IDetailsCreator<Engine>
+    public class EngineCreator : BaseDetailsCreator<Engine>
     {
-        public void Create()
+        public override void Create()
         {
-            var engine = new Engine(Guid.NewGuid());
+            var engine = new Engine();
 
             Thread.Sleep(Configure.EngineCreateTime);
 
-            _detailsMediator.Notify(engine, CreatingStatus.Created);
+            _detailsMediator.Notify(CreatingStatus.Created, engine);
         }
     }
 }

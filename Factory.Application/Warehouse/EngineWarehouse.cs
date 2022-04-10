@@ -1,5 +1,8 @@
 ﻿using Factory.Core.Buiders;
+using Factory.Core.Entities;
+using Factory.Core.Enums;
 using Factory.Core.Mediators;
+using Factory.Core.Warehouse.Base;
 
 namespace Factory.Core.Warehouse
 {
@@ -18,8 +21,8 @@ namespace Factory.Core.Warehouse
             if (Details.Count > 0)
             {
                 Console.WriteLine($"Warehouse has an engine");
-
                 carBuilder.PassEngine(Details.Dequeue());
+
                 return;
             }
 
@@ -42,7 +45,7 @@ namespace Factory.Core.Warehouse
 
             if (Details.Count() < _capacity)
             {
-                _detailsMediator.Notify(null, CreatingStatus.CanCreate);
+                _detailsMediator.Notify(CreatingStatus.CanCreate);
             }
             else
             {
@@ -54,7 +57,7 @@ namespace Factory.Core.Warehouse
         {
             if (Details.Count() < _capacity)
             {
-                _detailsMediator.Notify(null, CreatingStatus.CanCreate);
+                _detailsMediator.Notify(CreatingStatus.CanCreate);
             }
         }
     }

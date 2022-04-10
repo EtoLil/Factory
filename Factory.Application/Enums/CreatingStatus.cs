@@ -1,4 +1,4 @@
-﻿namespace Factory.Core.Mediators
+﻿namespace Factory.Core.Enums
 {
     public enum CreatingStatus
     {

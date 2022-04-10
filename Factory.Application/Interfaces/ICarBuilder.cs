@@ -1,4 +1,6 @@
-﻿namespace Factory.Core.Buiders
+﻿using Factory.Core.Entities;
+
+namespace Factory.Core.Buiders
 {
     public interface ICarBuilder
     {

@@ -1,4 +1,7 @@
 ﻿using Factory.Core.Buiders;
+using Factory.Core.Entities;
+using Factory.Core.Enums;
+using Factory.Core.Interfaces;
 using Factory.Core.Warehouse;
 
 namespace Factory.Core.Mediators
@@ -18,26 +21,23 @@ namespace Factory.Core.Mediators
         }
 
         //TODO: Refactore
-        public void Notify(Car car, CreatingStatus @event)
+        public void Notify(CreatingStatus @event, Car? car = null)
         {
-            if (@event == CreatingStatus.Created)
+            switch (@event)
             {
-                Console.WriteLine($"Car Created");
-                _carWarehouse.AddCar(car);
-            }
-
-            if (@event == CreatingStatus.CanCreate)
-            {
-                Console.WriteLine($"Car warehouse not full");
-
-                _carBuilder.MakeOrder();
+                case CreatingStatus.Created:
+                    Console.WriteLine($"Car Created");
+                    _carWarehouse.AddCar(car);
+                    break;
+                case CreatingStatus.CanCreate:
+                    Console.WriteLine($"Car warehouse not full");
+                    _carBuilder.MakeOrder();
+                    break;
+                case CreatingStatus.CanNotCreate:
+                    break;
+                default:
+                    break;
             }
         }
-    }
-
-    public enum CarEventType
-    {
-        CarCreated,
-        WarehouseNotFull
     }
 }

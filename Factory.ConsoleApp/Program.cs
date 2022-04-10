@@ -1,7 +1,7 @@
 ﻿// See https://aka.ms/new-console-template for more information
-using Factory.Core;
 using Factory.Core.Buiders;
 using Factory.Core.Creators;
+using Factory.Core.Entities;
 using Factory.Core.Mediators;
 using Factory.Core.Warehouse;
 
@@ -36,3 +36,5 @@ Task.Run(carWarehouse1.Start);
 Task.Run(carWarehouse2.Start);
 
 Console.ReadLine();
+
+//TODO: Abstract mediator

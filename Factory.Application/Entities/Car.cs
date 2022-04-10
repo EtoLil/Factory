@@ -1,12 +1,15 @@
-﻿namespace Factory.Core
+﻿using Factory.Core.Entities.Base;
+using Factory.Core.Interfaces;
+
+namespace Factory.Core.Entities
 {
-    public class Car
+    public class Car : BaseEntity, ICar
     {
         public Engine Engine { get; private set; }
         public Body Body { get; private set; }
         public Accessories Accessories { get; private set; }
 
-        public Car(Engine engine, Body body, Accessories accessories)
+        public Car(Engine engine, Body body, Accessories accessories) : base()
         {
             Engine = engine;
             Body = body;

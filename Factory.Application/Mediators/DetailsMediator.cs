@@ -1,10 +1,10 @@
-﻿using Factory.Core.Creators;
-using Factory.Core.Warehouse;
+﻿using Factory.Core.Enums;
+using Factory.Core.Interfaces;
 
 namespace Factory.Core.Mediators
 {
     public class DetailsMediator<T> : IMediator<T>
-        where T : IDetails
+        where T : class, IDetails
     {
         private IDetailsWarehouse<T> _detailsWarehouse;
 
@@ -19,19 +19,22 @@ namespace Factory.Core.Mediators
         }
 
         //TODO: Refactore
-        public void Notify(T input, CreatingStatus @event)
+        public void Notify(CreatingStatus @event, T? input = null)
         {
-            if (@event == CreatingStatus.Created)
+            switch (@event)
             {
-                Console.WriteLine($"{typeof(T).Name} Created");
-                _detailsWarehouse.AddDetail(input);
-            }
-
-            if (@event == CreatingStatus.CanCreate)
-            {
-                Console.WriteLine($"{typeof(T).Name} warehouse not full");
-
-                _detailsCreator.Create();
+                case CreatingStatus.Created:
+                    Console.WriteLine($"{typeof(T).Name} Created");
+                    _detailsWarehouse.AddDetail(input);
+                    break;
+                case CreatingStatus.CanCreate:
+                    Console.WriteLine($"{typeof(T).Name} warehouse not full");
+                    _detailsCreator.Create();
+                    break;
+                case CreatingStatus.CanNotCreate:
+                    break;
+                default:
+                    break;
             }
         }
     }

@@ -1,4 +1,6 @@
-﻿using Factory.Core.Mediators;
+﻿using Factory.Core.Entities;
+using Factory.Core.Enums;
+using Factory.Core.Mediators;
 
 namespace Factory.Core.Warehouse
 {
@@ -29,7 +31,7 @@ namespace Factory.Core.Warehouse
 
             if (_cars.Count() < _capacity)
             {
-                _carMediator.Notify(null, CreatingStatus.CanCreate);
+                _carMediator.Notify(CreatingStatus.CanCreate);
             }
             else
             {
@@ -45,7 +47,7 @@ namespace Factory.Core.Warehouse
         {
             if (_cars.Count() < _capacity)
             {
-                _carMediator.Notify(null, CreatingStatus.CanCreate);
+                _carMediator.Notify(CreatingStatus.CanCreate);
             }
         }
 
