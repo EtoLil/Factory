@@ -4,9 +4,9 @@ namespace Factory.Core.Buiders
 {
     public interface ICarBuilder
     {
-        void PassEngine(Engine engine);
-        void PassBody(Body body);
-        void PassAccessories(Accessories accessories);
-        void MakeOrder();
+        void TakeEngine(Engine engine);
+        void TakeBody(Body body);
+        void TakeAccessories(Accessories accessories);
+        void HandleOrder();
     }
 }

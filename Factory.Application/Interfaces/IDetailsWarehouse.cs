@@ -7,7 +7,7 @@ namespace Factory.Core.Interfaces
         where T : class, IDetails
     {
         void AddDetail(T detail);
-        void MakeOrder(CarBuilder carBuilder);
+        void HandleOrder(CarBuilder carBuilder);
         void SetMediator(DetailsMediator<T> detailsMediator);
     }
 }

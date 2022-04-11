@@ -39,7 +39,7 @@ namespace Factory.Core.Buiders
             _body = null;
         }
 
-        public void PassEngine(Engine engine)
+        public void TakeEngine(Engine engine)
         {
             Console.WriteLine($"Pass Engine");
 
@@ -47,7 +47,7 @@ namespace Factory.Core.Buiders
             TryToCreate();
         }
 
-        public void PassBody(Body body)
+        public void TakeBody(Body body)
         {
             Console.WriteLine($"Pass Body");
 
@@ -55,7 +55,7 @@ namespace Factory.Core.Buiders
             TryToCreate();
         }
 
-        public void PassAccessories(Accessories accessories)
+        public void TakeAccessories(Accessories accessories)
         {
             Console.WriteLine($"Pass Accessories");
 
@@ -63,13 +63,13 @@ namespace Factory.Core.Buiders
             TryToCreate();
         }
 
-        public void MakeOrder()
+        public void HandleOrder()
         {
             Console.WriteLine($"Car: make order");
 
-            _engineWarehouse.MakeOrder(this);
-            _bodyWarehouse.MakeOrder(this);
-            _accessoriesWarehouse.MakeOrder(this);
+            _engineWarehouse.HandleOrder(this);
+            _bodyWarehouse.HandleOrder(this);
+            _accessoriesWarehouse.HandleOrder(this);
         }
 
         public void SetMediator(CarMediator carMediator)

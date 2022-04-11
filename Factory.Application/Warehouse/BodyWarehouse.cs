@@ -16,13 +16,13 @@ namespace Factory.Core.Warehouse
         {
         }
 
-        public override void MakeOrder(CarBuilder carBuilder)
+        public override void HandleOrder(CarBuilder carBuilder)
         {
             if (Details.Count > 0)
             {
                 Console.WriteLine($"Warehouse has a body");
 
-                carBuilder.PassBody(Details.Dequeue());
+                carBuilder.TakeBody(Details.Dequeue());
                 _detailsMediator.Notify(CreatingStatus.CanCreate);
                 return;
             }
@@ -37,7 +37,7 @@ namespace Factory.Core.Warehouse
             {
                 var carBuilder = CarBuilders.Dequeue();
 
-                carBuilder.PassBody(detail);
+                carBuilder.TakeBody(detail);
             }
             else
             {

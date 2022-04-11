@@ -31,7 +31,7 @@ namespace Factory.Core.Mediators
                     break;
                 case CreatingStatus.CanCreate:
                     Console.WriteLine($"Car warehouse not full");
-                    _carBuilder.MakeOrder();
+                    _carBuilder.HandleOrder();
                     break;
                 case CreatingStatus.CanNotCreate:
                     break;

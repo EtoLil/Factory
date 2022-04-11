@@ -13,13 +13,13 @@ namespace Factory.Core.Warehouse
         {
         }
 
-        public override void MakeOrder(CarBuilder carBuilder)
+        public override void HandleOrder(CarBuilder carBuilder)
         {
             if (Details.Count > 0)
             {
                 Console.WriteLine($"Warehouse has accessories");
 
-                carBuilder.PassAccessories(Details.Dequeue());
+                carBuilder.TakeAccessories(Details.Dequeue());
                 _detailsMediator.Notify(CreatingStatus.CanCreate);
                 return;
             }
@@ -34,7 +34,7 @@ namespace Factory.Core.Warehouse
             {
                 var carBuilder = CarBuilders.Dequeue();
 
-                carBuilder.PassAccessories(detail);
+                carBuilder.TakeAccessories(detail);
             }
             else
             {

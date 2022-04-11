@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ClassDiagram MajorVersion="1" MinorVersion="1">
-  <Class Name="Factory.Core.Entities.Body" Collapsed="true">
+  <Class Name="Factory.Core.Entities.Body">
     <Position X="7.25" Y="3" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
@@ -56,14 +56,14 @@
     </TypeIdentifier>
     <Lollipop Position="0.2" />
   </Class>
-  <Class Name="Factory.Core.Creators.AccessoriesCreator" Collapsed="true">
+  <Class Name="Factory.Core.Creators.AccessoriesCreator">
     <Position X="7.75" Y="5.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAA=</HashCode>
       <FileName>Creators\AccessoriesCreator.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="Factory.Core.Creators.BodyCreator" Collapsed="true">
+  <Class Name="Factory.Core.Creators.BodyCreator">
     <Position X="10" Y="5.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAA=</HashCode>
@@ -80,7 +80,7 @@
   <Class Name="Factory.Core.Warehouse.Base.DetailsWarehouse&lt;T&gt;" Collapsed="true">
     <Position X="10.25" Y="13" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAEAAAAAAAAFAAAAAAAgAAQAAAAAAAAAAIAAAAAAACA=</HashCode>
+      <HashCode>AAEAAAAAAAAFAAAAAAAgAAQAAAAAAAAAAAAAAAAIACA=</HashCode>
       <FileName>Warehouse\Base\DetailsWarehouse.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
@@ -88,14 +88,14 @@
   <Class Name="Factory.Core.Warehouse.AccessoriesWarehouse" Collapsed="true">
     <Position X="7" Y="15.75" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAACAEAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAACAEAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAA=</HashCode>
       <FileName>Warehouse\AccessoriesWarehouse.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="Factory.Core.Warehouse.BodyWarehouse" Collapsed="true">
+  <Class Name="Factory.Core.Warehouse.BodyWarehouse">
     <Position X="10.5" Y="15.75" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAACAEAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAACAEAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAA=</HashCode>
       <FileName>Warehouse\BodyWarehouse.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -105,11 +105,12 @@
       <HashCode>AIAAAAIAACAAAAACAAAgAAQAAAAAAAAAAAAAAAAIAAA=</HashCode>
       <FileName>Warehouse\CarWarehouse.cs</FileName>
     </TypeIdentifier>
+    <Lollipop Position="0.2" />
   </Class>
-  <Class Name="Factory.Core.Warehouse.EngineWarehouse" Collapsed="true">
+  <Class Name="Factory.Core.Warehouse.EngineWarehouse">
     <Position X="13.5" Y="15.75" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAACAEAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAACAEAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAA=</HashCode>
       <FileName>Warehouse\EngineWarehouse.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -132,7 +133,7 @@
   <Class Name="Factory.Core.Buiders.CarBuilder" Collapsed="true">
     <Position X="10.25" Y="18.25" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>YAACIAAAAEAABAACAAAgAAAAAASAAAAIAIAAACBQEAA=</HashCode>
+      <HashCode>YAAAAAAAAMAABAACAAAgAAAAAASAAAAIAAAAACBIEEA=</HashCode>
       <FileName>Buiders\CarBuilder.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
@@ -161,7 +162,7 @@
   <Interface Name="Factory.Core.Interfaces.IDetailsWarehouse&lt;T&gt;" Collapsed="true">
     <Position X="2.75" Y="13" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAEAAAAAAAgAAAAAAAAAAAAAIAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAAAEAAAAAAAgAAAAAAAAAAAAAAAAAAAIAAA=</HashCode>
       <FileName>Interfaces\IDetailsWarehouse.cs</FileName>
     </TypeIdentifier>
   </Interface>
@@ -196,7 +197,7 @@
   <Interface Name="Factory.Core.Buiders.ICarBuilder" Collapsed="true">
     <Position X="2.75" Y="18" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAACIAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAQAAA=</HashCode>
+      <HashCode>AAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAEA=</HashCode>
       <FileName>Interfaces\ICarBuilder.cs</FileName>
     </TypeIdentifier>
   </Interface>

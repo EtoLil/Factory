@@ -1,11 +1,12 @@
 ﻿using Factory.Core.Entities;
 using Factory.Core.Enums;
+using Factory.Core.Interfaces;
 using Factory.Core.Mediators;
 using System.Collections.Concurrent;
 
 namespace Factory.Core.Warehouse
 {
-    public class CarWarehouse
+    public class CarWarehouse : ICarWarehouse
     {
         private readonly uint _capacity;
 

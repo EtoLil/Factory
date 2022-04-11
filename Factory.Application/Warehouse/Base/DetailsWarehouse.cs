@@ -21,7 +21,7 @@ namespace Factory.Core.Warehouse.Base
             CarBuilders = new Queue<CarBuilder>();
         }
 
-        public abstract void MakeOrder(CarBuilder carBuilder);
+        public abstract void HandleOrder(CarBuilder carBuilder);
 
         public abstract void AddDetail(T detail);
 
