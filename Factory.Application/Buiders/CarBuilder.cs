@@ -44,7 +44,7 @@ namespace Factory.Core.Buiders
             Console.WriteLine($"Pass Engine");
 
             _engine = engine;
-            TryToCreate();
+            TryToSend();
         }
 
         public void TakeBody(Body body)
@@ -52,7 +52,7 @@ namespace Factory.Core.Buiders
             Console.WriteLine($"Pass Body");
 
             _body = body;
-            TryToCreate();
+            TryToSend();
         }
 
         public void TakeAccessories(Accessories accessories)
@@ -60,7 +60,7 @@ namespace Factory.Core.Buiders
             Console.WriteLine($"Pass Accessories");
 
             _accessories = accessories;
-            TryToCreate();
+            TryToSend();
         }
 
         public void HandleOrder()
@@ -77,12 +77,15 @@ namespace Factory.Core.Buiders
             _carMediator = carMediator;
         }
 
-        private void TryToCreate()
+        public Car TryToCreate(out bool isCreated)
         {
+            isCreated = false;
             if (AreAllPartsReady())
             {
-                CreateCar();
+                isCreated = true;
+                return Create();
             }
+            return null;
         }
 
         private bool AreAllPartsReady()
@@ -92,14 +95,21 @@ namespace Factory.Core.Buiders
                 && _accessories is not null;
         }
 
-        private void CreateCar()
+        public bool TryToSend()
+        {
+            Car car = TryToCreate(out bool isCreated);
+            if(isCreated)
+            {
+                _carMediator.Notify(CreatingStatus.Created, car);
+            }
+            return isCreated;
+        }
+        private Car Create()
         {
             Thread.Sleep(Configure.CarCreateTime);
             var car = new Car(_engine, _body, _accessories);
-
             Reset();
-
-            _carMediator.Notify(CreatingStatus.Created, car);
+            return car;
         }
     }
 }

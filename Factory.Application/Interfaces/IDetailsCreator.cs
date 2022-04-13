@@ -5,7 +5,8 @@ namespace Factory.Core.Interfaces
     public interface IDetailsCreator<T>
         where T : class, IDetails
     {
-        void Create();
+        void Send();
+        T Create();
         void SetMediator(DetailsMediator<T> detailsMediator);
     }
 }

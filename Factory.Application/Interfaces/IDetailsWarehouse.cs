@@ -9,5 +9,7 @@ namespace Factory.Core.Interfaces
         void AddDetail(T detail);
         void HandleOrder(CarBuilder carBuilder);
         void SetMediator(DetailsMediator<T> detailsMediator);
+        void Init();
+        void Run();
     }
 }

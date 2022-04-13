@@ -6,13 +6,15 @@ namespace Factory.Core.Creators
 {
     public class AccessoriesCreator : BaseDetailsCreator<Accessories>
     {
-        public override void Create()
+        public override void Send()
         {
-            var accessories = new Accessories();
-
-            Thread.Sleep(Configure.AccessoriesCreateTime);
-
+            var accessories = Create();           
             _detailsMediator.Notify(CreatingStatus.Created, accessories);
+        }
+        public override Accessories Create()
+        {
+            Thread.Sleep(Configure.AccessoriesCreateTime);
+            return new Accessories();
         }
     }
 }

@@ -6,13 +6,15 @@ namespace Factory.Core.Creators
 {
     public class EngineCreator : BaseDetailsCreator<Engine>
     {
-        public override void Create()
+        public override void Send()
         {
-            var engine = new Engine();
-
-            Thread.Sleep(Configure.EngineCreateTime);
-
+            var engine = Create();
             _detailsMediator.Notify(CreatingStatus.Created, engine);
+        }
+        public override Engine Create()
+        {
+            Thread.Sleep(Configure.EngineCreateTime);
+            return new Engine();
         }
     }
 }

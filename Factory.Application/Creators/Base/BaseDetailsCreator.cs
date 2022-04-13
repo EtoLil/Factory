@@ -13,7 +13,8 @@ namespace Factory.Core.Creators.Base
             _detailsMediator = detailsMediator;
         }
 
-        public abstract void Create();
+        public abstract void Send();
+        public abstract T Create();
 
         public void SetMediator(DetailsMediator<T> detailsMediator)
         {

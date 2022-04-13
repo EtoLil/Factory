@@ -8,5 +8,7 @@ namespace Factory.Core.Interfaces
         void HandleOrder(Dealer dealer);
         void AddCar(Car car);
         void SetMediator(CarMediator carMediator);
+        void Init();
+        void Run();
     }
 }

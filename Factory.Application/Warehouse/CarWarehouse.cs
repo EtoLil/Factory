@@ -14,12 +14,15 @@ namespace Factory.Core.Warehouse
         private CarMediator _carMediator;
         protected Queue<Dealer> _dealers;
 
+        protected ManualResetEvent _event = new ManualResetEvent(true);
+        protected Task _worker;
         public CarWarehouse(uint capcity, CarMediator carMediator = null)
         {
             _capacity = capcity;
             _carMediator = carMediator;
             _cars = new ConcurrentQueue<Car>();
             _dealers = new Queue<Dealer>();
+            _worker = new Task(Init);
         }
 
         public void HandleOrder(Dealer dealer)
@@ -30,10 +33,7 @@ namespace Factory.Core.Warehouse
 
                 dealer.TakeCar(car);
 
-                if (_cars.Count() + 1 == _capacity)
-                {
-                    _carMediator.Notify(CreatingStatus.CanCreate);
-                }
+                _event.Set();
                 return;
             }
 
@@ -54,27 +54,31 @@ namespace Factory.Core.Warehouse
                 _cars.Enqueue(car);
             }
 
-            if (_cars.Count() < _capacity)
+            if (_cars.Count() == _capacity)
             {
-                _carMediator.Notify(CreatingStatus.CanCreate);
-            }
-            else
-            {
+                _event.Reset();
                 Console.WriteLine($"CarWarehouse Full");
             }
-        }
-
-        public void Start()
-        {
-            if (_cars.Count() < _capacity)
-            {
-                _carMediator.Notify(CreatingStatus.CanCreate);
-            }
+            _event.WaitOne();
+            _carMediator.Notify(CreatingStatus.CanCreate);
         }
 
         public void SetMediator(CarMediator carMediator)
         {
             _carMediator = carMediator;
+        }
+
+        public void Init()
+        {
+            if (_cars.Count() < _capacity)
+            {
+                _carMediator.Notify(CreatingStatus.CanCreate);
+            }
+        }
+
+        public void Run()
+        {
+            _worker.Start();
         }
     }
 }

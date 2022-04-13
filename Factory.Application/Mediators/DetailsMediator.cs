@@ -29,7 +29,7 @@ namespace Factory.Core.Mediators
                     break;
                 case CreatingStatus.CanCreate:
                     Console.WriteLine($"{typeof(T).Name} warehouse not full");
-                    _detailsCreator.Create();
+                    _detailsCreator.Send();
                     break;
                 case CreatingStatus.CanNotCreate:
                     break;

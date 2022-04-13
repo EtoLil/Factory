@@ -8,5 +8,7 @@ namespace Factory.Core.Buiders
         void TakeBody(Body body);
         void TakeAccessories(Accessories accessories);
         void HandleOrder();
+        Car TryToCreate(out bool isCreated);
+        bool TryToSend();
     }
 }

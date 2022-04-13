@@ -15,48 +15,52 @@ namespace Factory.Core.Warehouse
 
         public override void HandleOrder(CarBuilder carBuilder)
         {
-            if (Details.Count > 0)
+            if (_details.Count > 0)
             {
-                Console.WriteLine($"Warehouse has accessories");
+                Console.WriteLine($"Warehouse has accessories {_details.Count}");
 
-                carBuilder.TakeAccessories(Details.Dequeue());
-                _detailsMediator.Notify(CreatingStatus.CanCreate);
+                carBuilder.TakeAccessories(_details.Dequeue());
+                _event.Set();
                 return;
             }
 
-            CarBuilders.Enqueue(carBuilder);
-            Console.WriteLine($"Warehouse has no accessories");
+            _carBuilders.Enqueue(carBuilder);
+            Console.WriteLine($"Warehouse has no accessories {_details.Count}");
         }
 
         public override void AddDetail(Accessories detail)
         {
-            if (CarBuilders.Count != 0)
+            if (_carBuilders.Count != 0)
             {
-                var carBuilder = CarBuilders.Dequeue();
+                var carBuilder = _carBuilders.Dequeue();
 
                 carBuilder.TakeAccessories(detail);
             }
             else
             {
-                Details.Enqueue(detail);
+                _details.Enqueue(detail);
             }
 
-            if (Details.Count() < _capacity)
+            if (_details.Count() == _capacity)
+            {
+                _event.Reset();
+                Console.WriteLine($"AccessoriesWarehouse Full {_details.Count}");
+            }
+            _event.WaitOne();
+            _detailsMediator.Notify(CreatingStatus.CanCreate);
+        }
+
+        public override void Init()
+        {
+            if (_details.Count() < _capacity)
             {
                 _detailsMediator.Notify(CreatingStatus.CanCreate);
-            }
-            else
-            {
-                Console.WriteLine($"AccessoriesWarehouse Full");
             }
         }
 
-        public void Start()
+        public override void Run()
         {
-            if (Details.Count() < _capacity)
-            {
-                _detailsMediator.Notify(CreatingStatus.CanCreate);
-            }
+            _worker.Start();
         }
     }
 }

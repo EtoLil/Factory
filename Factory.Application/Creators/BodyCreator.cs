@@ -6,13 +6,15 @@ namespace Factory.Core.Creators
 {
     public class BodyCreator : BaseDetailsCreator<Body>
     {
-        public override void Create()
+        public override void Send()
         {
-            var body = new Body();
-
-            Thread.Sleep(Configure.BodyCreateTime);
-
+            var body = Create();
             _detailsMediator.Notify(CreatingStatus.Created, body);
+        }
+        public override Body Create()
+        {
+            Thread.Sleep(Configure.BodyCreateTime);
+            return new Body();
         }
     }
 }
