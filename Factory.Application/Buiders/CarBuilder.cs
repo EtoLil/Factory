@@ -12,6 +12,8 @@ namespace Factory.Core.Buiders
         private AccessoriesWarehouse _accessoriesWarehouse;
         private CarMediator _carMediator;
 
+        private ManualResetEvent _event;
+
         private Engine _engine;
         private Body _body;
         private Accessories _accessories;
@@ -28,6 +30,8 @@ namespace Factory.Core.Buiders
             _engineWarehouse = engineWarehouse;
             _bodyWarehouse = bodyWarehouse;
             _accessoriesWarehouse = accessoriesWarehouse;
+
+            _event = new ManualResetEvent(true);
         }
 
         public void Reset()
@@ -44,7 +48,7 @@ namespace Factory.Core.Buiders
             Console.WriteLine($"Pass Engine");
 
             _engine = engine;
-            TryToSend();
+            Check();
         }
 
         public void TakeBody(Body body)
@@ -52,7 +56,7 @@ namespace Factory.Core.Buiders
             Console.WriteLine($"Pass Body");
 
             _body = body;
-            TryToSend();
+            Check();
         }
 
         public void TakeAccessories(Accessories accessories)
@@ -60,7 +64,7 @@ namespace Factory.Core.Buiders
             Console.WriteLine($"Pass Accessories");
 
             _accessories = accessories;
-            TryToSend();
+            Check();
         }
 
         public void HandleOrder()
@@ -70,23 +74,31 @@ namespace Factory.Core.Buiders
             _engineWarehouse.HandleOrder(this);
             _bodyWarehouse.HandleOrder(this);
             _accessoriesWarehouse.HandleOrder(this);
+
+            Check();
+            _event.WaitOne();
+            Send();
         }
+
+
 
         public void SetMediator(CarMediator carMediator)
         {
             _carMediator = carMediator;
         }
 
-        public Car TryToCreate(out bool isCreated)
+        private void Check()
         {
-            isCreated = false;
             if (AreAllPartsReady())
             {
-                isCreated = true;
-                return Create();
+                _event.Set();
             }
-            return null;
+            else
+            {
+                _event.Reset();
+            }
         }
+
 
         private bool AreAllPartsReady()
         {
@@ -95,16 +107,13 @@ namespace Factory.Core.Buiders
                 && _accessories is not null;
         }
 
-        public bool TryToSend()
+        public void Send()
         {
-            Car car = TryToCreate(out bool isCreated);
-            if(isCreated)
-            {
-                _carMediator.Notify(CreatingStatus.Created, car);
-            }
-            return isCreated;
+            Car car = Create();
+            _carMediator.Notify(CreatingStatus.Created, car);
+
         }
-        private Car Create()
+        public Car Create()
         {
             Thread.Sleep(Configure.CarCreateTime);
             var car = new Car(_engine, _body, _accessories);

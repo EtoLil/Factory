@@ -1,4 +1,5 @@
 ﻿using Factory.Core.Buiders;
+using Factory.Core.Enums;
 using Factory.Core.Interfaces;
 using Factory.Core.Mediators;
 
@@ -33,7 +34,17 @@ namespace Factory.Core.Warehouse.Base
         {
             _detailsMediator = detailsMediator;
         }
-        public abstract void Init();
-        public abstract void Run();
+        public void Init()
+        {
+            if (_details.Count() < _capacity)
+            {
+                _detailsMediator.Notify(CreatingStatus.CanCreate);
+            }
+        }
+
+        public void Run()
+        {
+            _worker.Start();
+        }
     }
 }

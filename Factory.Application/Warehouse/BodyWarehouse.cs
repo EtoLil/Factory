@@ -53,17 +53,5 @@ namespace Factory.Core.Warehouse
             _event.WaitOne();
             _detailsMediator.Notify(CreatingStatus.CanCreate);
         }
-
-        public override void Init()
-        {
-            if (_details.Count() < _capacity)
-            {
-                _detailsMediator.Notify(CreatingStatus.CanCreate);
-            }
-        }
-        public override void Run()
-        {
-            _worker.Start();
-        }
     }
 }

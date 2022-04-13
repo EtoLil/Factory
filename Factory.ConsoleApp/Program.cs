@@ -24,9 +24,8 @@ var carBuilder1 = new CarBuilder(engineWarehouse, bodyWarehouse, accessoriesWare
 var carWarehouse1 = new CarWarehouse(2);
 var carMediator1 = new CarMediator(carWarehouse1, carBuilder1);
 
-//var dealer1 = new Dealer(carWarehouse1);
-//var dealer2 = new Dealer(carWarehouse1);
-//var dealer3 = new Dealer(carWarehouse1);
+var dealer1 = new Dealer(carWarehouse1);
+var dealer2 = new Dealer(carWarehouse1);
 
 
 engineWarehouse.Run();
@@ -35,52 +34,21 @@ accessoriesWarehouse.Run();
 
 carWarehouse1.Run();
 
-//Thread.Sleep(21000);
-
-//Task.Run(dealer1.Start);
-//Thread.Sleep(100);
-
-//Task.Run(dealer2.Start);
-//Thread.Sleep(100);
-
-//Task.Run(dealer3.Start);
-//Thread.Sleep(100);
-
-//Task.Run(dealer1.Start);
-//Thread.Sleep(100);
-
-//Task.Run(dealer2.Start);
-//Thread.Sleep(100);
-
-//Task.Run(dealer3.Start);
+Thread.Sleep(24000);
 
 
+Task.Run(dealer1.Start);
+Task.Run(dealer2.Start);
 
+Thread.Sleep(100);
 
-// ManualResetEvent _event = new ManualResetEvent(true);
-// void P()
-//{
+Task.Run(dealer1.Start);
+Task.Run(dealer2.Start);
 
-//    Console.WriteLine("hihi");
-//    Thread.Sleep(5000);
-//    _event.WaitOne();
-//    Console.WriteLine("hihi x2");
-//}
-
-//Task task = new Task(P);
-//task.Start();
-
-//Thread.Sleep(4000);
-//Console.WriteLine("ccc");
-//_event.Reset();
-
-//Console.WriteLine("ccc1");
-//Thread.Sleep(4000);
-//_event.Set();
 
 Console.ReadLine();
 
-//TODO: Abstract mediator
+
 
 
 
