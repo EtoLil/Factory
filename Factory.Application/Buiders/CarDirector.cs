@@ -1,28 +1,32 @@
 ﻿using Factory.Core.Entities;
 using Factory.Core.Enums;
+using Factory.Core.Interfaces;
 using Factory.Core.Mediators;
 using Factory.Core.Warehouse;
 
 namespace Factory.Core.Buiders
 {
-    public class CarBuilder : ICarBuilder
+    public class CarDirector : ICarDirector
     {
-        private BodyWarehouse _bodyWarehouse;
-        private EngineWarehouse _engineWarehouse;
-        private AccessoriesWarehouse _accessoriesWarehouse;
-        private CarMediator _carMediator;
+        private IDetailsWarehouse<Body> _bodyWarehouse;
+        private IDetailsWarehouse<Engine> _engineWarehouse;
+        private IDetailsWarehouse<Accessories> _accessoriesWarehouse;
+        private IMediator<ICar> _carMediator;
 
         private ManualResetEvent _event;
 
-        private Engine _engine;
-        private Body _body;
-        private Accessories _accessories;
+        private ICarBulder _carBulder;
 
-        public CarBuilder(
-            EngineWarehouse engineWarehouse,
-            BodyWarehouse bodyWarehouse,
-            AccessoriesWarehouse accessoriesWarehouse,
-            CarMediator carMediator = null
+        private bool _isEngineReceived;
+        private bool _isBodyReceived;
+        private bool _isAccessoriesReceived;
+
+        public CarDirector(
+            int id,
+            IDetailsWarehouse<Engine> engineWarehouse,
+            IDetailsWarehouse<Body> bodyWarehouse,
+            IDetailsWarehouse<Accessories> accessoriesWarehouse,
+            IMediator<ICar> carMediator = null
             )
         {
             _carMediator = carMediator;
@@ -32,30 +36,33 @@ namespace Factory.Core.Buiders
             _accessoriesWarehouse = accessoriesWarehouse;
 
             _event = new ManualResetEvent(true);
+
+            _carBulder = new CarBulder(id);
         }
 
         public void Reset()
         {
             Console.WriteLine($"Reset");
 
-            _accessories = null;
-            _engine = null;
-            _body = null;
+            _isEngineReceived = false;
+            _isBodyReceived = false;
+            _isAccessoriesReceived = false;
         }
 
         public void TakeEngine(Engine engine)
         {
             Console.WriteLine($"Pass Engine");
 
-            _engine = engine;
+            _carBulder.BuildEngine(engine);
+            _isEngineReceived = true;
             Check();
         }
 
         public void TakeBody(Body body)
         {
             Console.WriteLine($"Pass Body");
-
-            _body = body;
+            _carBulder.BuildBody(body);
+            _isBodyReceived = true;
             Check();
         }
 
@@ -63,7 +70,8 @@ namespace Factory.Core.Buiders
         {
             Console.WriteLine($"Pass Accessories");
 
-            _accessories = accessories;
+            _carBulder.BuildAccessories(accessories);
+            _isAccessoriesReceived = true;
             Check();
         }
 
@@ -82,7 +90,7 @@ namespace Factory.Core.Buiders
 
 
 
-        public void SetMediator(CarMediator carMediator)
+        public void SetMediator(IMediator<ICar> carMediator)
         {
             _carMediator = carMediator;
         }
@@ -102,23 +110,16 @@ namespace Factory.Core.Buiders
 
         private bool AreAllPartsReady()
         {
-            return _engine is not null
-                && _body is not null
-                && _accessories is not null;
+            return _isEngineReceived
+                && _isAccessoriesReceived
+                && _isBodyReceived;
         }
 
         public void Send()
         {
-            Car car = Create();
-            _carMediator.Notify(CreatingStatus.Created, car);
-
-        }
-        public Car Create()
-        {
-            Thread.Sleep(Configure.CarCreateTime);
-            var car = new Car(_engine, _body, _accessories);
+            var car = _carBulder.GetResult();
             Reset();
-            return car;
+            _carMediator.Notify(CreatingStatus.Created, car);
         }
     }
 }

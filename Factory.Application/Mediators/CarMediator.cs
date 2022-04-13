@@ -6,22 +6,22 @@ using Factory.Core.Warehouse;
 
 namespace Factory.Core.Mediators
 {
-    public class CarMediator : IMediator<Car>
+    public class CarMediator : IMediator<ICar>
     {
-        private CarWarehouse _carWarehouse;
+        private ICarWarehouse _carWarehouse;
 
-        private CarBuilder _carBuilder;
+        private ICarDirector _carDirector;
 
-        public CarMediator(CarWarehouse carWarehouse, CarBuilder carBuilder)
+        public CarMediator(ICarWarehouse carWarehouse, ICarDirector carDirector)
         {
             _carWarehouse = carWarehouse;
             _carWarehouse.SetMediator(this);
-            _carBuilder = carBuilder;
-            _carBuilder.SetMediator(this);
+            _carDirector = carDirector;
+            _carDirector.SetMediator(this);
         }
 
         //TODO: Refactore
-        public void Notify(CreatingStatus @event, Car? car = null)
+        public void Notify(CreatingStatus @event, ICar? car = null)
         {
             switch (@event)
             {
@@ -31,7 +31,7 @@ namespace Factory.Core.Mediators
                     break;
                 case CreatingStatus.CanCreate:
                     Console.WriteLine($"Car warehouse not full");
-                    _carBuilder.HandleOrder();
+                    _carDirector.HandleOrder();
                     break;
                 case CreatingStatus.CanNotCreate:
                     break;

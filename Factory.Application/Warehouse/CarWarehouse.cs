@@ -10,24 +10,24 @@ namespace Factory.Core.Warehouse
     {
         private readonly uint _capacity;
 
-        private ConcurrentQueue<Car> _cars;
-        private CarMediator _carMediator;
-        protected Queue<Dealer> _dealers;
+        private ConcurrentQueue<ICar> _cars;
+        private IMediator<ICar> _carMediator;
+        protected Queue<IDealer> _dealers;
 
         protected ManualResetEvent _event = new ManualResetEvent(true);
         protected Task _worker;
-        public CarWarehouse(uint capcity, CarMediator carMediator = null)
+        public CarWarehouse(uint capcity, IMediator<ICar> carMediator = null)
         {
             _capacity = capcity;
             _carMediator = carMediator;
-            _cars = new ConcurrentQueue<Car>();
-            _dealers = new Queue<Dealer>();
+            _cars = new ConcurrentQueue<ICar>();
+            _dealers = new Queue<IDealer>();
             _worker = new Task(Init);
         }
 
-        public void HandleOrder(Dealer dealer)
+        public void HandleOrder(IDealer dealer)
         {
-            if (_cars.Count > 0 && _cars.TryDequeue(out Car? car))
+            if (_cars.Count > 0 && _cars.TryDequeue(out ICar? car))
             {
                 Console.WriteLine($"Warehouse has a car");
 
@@ -41,7 +41,7 @@ namespace Factory.Core.Warehouse
             _dealers.Enqueue(dealer);
         }
 
-        public void AddCar(Car car)
+        public void AddCar(ICar car)
         {
             if (_dealers.Count != 0)
             {
@@ -63,7 +63,7 @@ namespace Factory.Core.Warehouse
             _carMediator.Notify(CreatingStatus.CanCreate);
         }
 
-        public void SetMediator(CarMediator carMediator)
+        public void SetMediator(IMediator<ICar> carMediator)
         {
             _carMediator = carMediator;
         }

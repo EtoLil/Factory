@@ -1,6 +1,7 @@
 ﻿using Factory.Core.Buiders;
 using Factory.Core.Entities;
 using Factory.Core.Enums;
+using Factory.Core.Interfaces;
 using Factory.Core.Mediators;
 using Factory.Core.Warehouse.Base;
 
@@ -10,13 +11,13 @@ namespace Factory.Core.Warehouse
     {
         public EngineWarehouse(
             uint capcity,
-            DetailsMediator<Engine> detailsMediator = null
+            IMediator<Engine> detailsMediator = null
             )
             : base(capcity, detailsMediator)
         {
         }
 
-        public override void HandleOrder(CarBuilder carBuilder)
+        public override void HandleOrder(ICarDirector carBuilder)
         {
             if (_details.Count > 0)
             {
@@ -29,14 +30,14 @@ namespace Factory.Core.Warehouse
             }
 
             Console.WriteLine($"Warehouse has no engine {_details.Count}");
-            _carBuilders.Enqueue(carBuilder);
+            _carDirectors.Enqueue(carBuilder);
         }
 
         public override void AddDetail(Engine detail)
         {
-            if (_carBuilders.Count != 0)
+            if (_carDirectors.Count != 0)
             {
-                var carBuilder = _carBuilders.Dequeue();
+                var carBuilder = _carDirectors.Dequeue();
 
                 carBuilder.TakeEngine(detail);
             }

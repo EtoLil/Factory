@@ -6,11 +6,11 @@ namespace Factory.Core.Entities
 {
     public class Dealer : BaseEntity, IDealer
     {
-        private CarWarehouse _carWarehouse;
+        private ICarWarehouse _carWarehouse;
 
         public IList<ICar> Cars { get; set; }
 
-        public Dealer(CarWarehouse carWarehouse) : base()
+        public Dealer(ICarWarehouse carWarehouse) : base()
         {
             _carWarehouse = carWarehouse;
             Cars = new List<ICar>();
@@ -22,7 +22,12 @@ namespace Factory.Core.Entities
             Cars.Add(car);
         }
 
-        public void Start()
+        public void Run(int dealerRequestTime)
+        {
+            Timer timer = new Timer(new TimerCallback(Start), null, 0, dealerRequestTime);
+        }
+
+        private void Start(object? obj)
         {
             _carWarehouse.HandleOrder(this);
         }

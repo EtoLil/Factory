@@ -6,9 +6,9 @@ namespace Factory.Core.Creators.Base
     public abstract class BaseDetailsCreator<T> : IDetailsCreator<T>
         where T : class, IDetails
     {
-        protected DetailsMediator<T> _detailsMediator;
-
-        public BaseDetailsCreator(DetailsMediator<T> detailsMediator = null)
+        protected IMediator<T> _detailsMediator;
+        protected int _id;
+        public BaseDetailsCreator(IMediator<T> detailsMediator = null)
         {
             _detailsMediator = detailsMediator;
         }
@@ -16,7 +16,7 @@ namespace Factory.Core.Creators.Base
         public abstract void Send();
         public abstract T Create();
 
-        public void SetMediator(DetailsMediator<T> detailsMediator)
+        public void SetMediator(IMediator<T> detailsMediator)
         {
             _detailsMediator = detailsMediator;
         }

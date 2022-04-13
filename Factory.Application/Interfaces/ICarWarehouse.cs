@@ -5,9 +5,9 @@ namespace Factory.Core.Interfaces
 {
     public interface ICarWarehouse
     {
-        void HandleOrder(Dealer dealer);
-        void AddCar(Car car);
-        void SetMediator(CarMediator carMediator);
+        void HandleOrder(IDealer dealer);
+        void AddCar(ICar car);
+        void SetMediator(IMediator<ICar> carMediator);
         void Init();
         void Run();
     }

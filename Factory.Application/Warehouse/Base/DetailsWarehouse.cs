@@ -10,27 +10,27 @@ namespace Factory.Core.Warehouse.Base
     {
         protected readonly uint _capacity;
 
-        protected DetailsMediator<T> _detailsMediator;
+        protected IMediator<T> _detailsMediator;
         protected Queue<T> _details;
-        protected Queue<CarBuilder> _carBuilders;
+        protected Queue<ICarDirector> _carDirectors;
 
         protected ManualResetEvent _event;
         protected Task _worker;
-        public DetailsWarehouse(uint capcity, DetailsMediator<T> detailsMediator = null)
+        public DetailsWarehouse(uint capcity, IMediator<T> detailsMediator = null)
         {
             _capacity = capcity;
             _detailsMediator = detailsMediator;
             _details = new Queue<T>();
-            _carBuilders = new Queue<CarBuilder>();
+            _carDirectors = new Queue<ICarDirector>();
             _event = new ManualResetEvent(true);
             _worker = new Task(Init);
         }
 
-        public abstract void HandleOrder(CarBuilder carBuilder);
+        public abstract void HandleOrder(ICarDirector carDirector);
 
         public abstract void AddDetail(T detail);
 
-        public void SetMediator(DetailsMediator<T> detailsMediator)
+        public void SetMediator(IMediator<T> detailsMediator)
         {
             _detailsMediator = detailsMediator;
         }

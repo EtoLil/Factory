@@ -1,14 +1,14 @@
 ﻿using Factory.Core.Entities;
 
-namespace Factory.Core.Buiders
+namespace Factory.Core.Interfaces
 {
-    public interface ICarBuilder
+    public interface ICarDirector
     {
         void TakeEngine(Engine engine);
         void TakeBody(Body body);
         void TakeAccessories(Accessories accessories);
         void HandleOrder();
-        Car Create();
         void Send();
+        void SetMediator(IMediator<ICar> carMediator);
     }
 }

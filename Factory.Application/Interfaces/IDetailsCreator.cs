@@ -7,6 +7,6 @@ namespace Factory.Core.Interfaces
     {
         void Send();
         T Create();
-        void SetMediator(DetailsMediator<T> detailsMediator);
+        void SetMediator(IMediator<T> detailsMediator);
     }
 }

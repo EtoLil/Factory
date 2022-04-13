@@ -4,6 +4,6 @@
     {
         IList<ICar> Cars { get; set; }
         void TakeCar(ICar car);
-        void Start();
+        void Run(int dealerRequestTime);
     }
 }

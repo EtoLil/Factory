@@ -1,6 +1,7 @@
 ﻿using Factory.Core.Buiders;
 using Factory.Core.Entities;
 using Factory.Core.Enums;
+using Factory.Core.Interfaces;
 using Factory.Core.Mediators;
 using Factory.Core.Warehouse.Base;
 
@@ -8,12 +9,12 @@ namespace Factory.Core.Warehouse
 {
     public class AccessoriesWarehouse : DetailsWarehouse<Accessories>
     {
-        public AccessoriesWarehouse(uint capcity, DetailsMediator<Accessories> detailsMediator = null)
+        public AccessoriesWarehouse(uint capcity, IMediator<Accessories> detailsMediator = null)
             : base(capcity, detailsMediator)
         {
         }
 
-        public override void HandleOrder(CarBuilder carBuilder)
+        public override void HandleOrder(ICarDirector carBuilder)
         {
             if (_details.Count > 0)
             {
@@ -24,15 +25,15 @@ namespace Factory.Core.Warehouse
                 return;
             }
 
-            _carBuilders.Enqueue(carBuilder);
+            _carDirectors.Enqueue(carBuilder);
             Console.WriteLine($"Warehouse has no accessories {_details.Count}");
         }
 
         public override void AddDetail(Accessories detail)
         {
-            if (_carBuilders.Count != 0)
+            if (_carDirectors.Count != 0)
             {
-                var carBuilder = _carBuilders.Dequeue();
+                var carBuilder = _carDirectors.Dequeue();
 
                 carBuilder.TakeAccessories(detail);
             }
