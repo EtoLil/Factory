@@ -17,7 +17,11 @@ namespace Factory.Core.Warehouse
 
         protected ManualResetEvent _event = new ManualResetEvent(true);
         protected Task _worker;
-        protected static object _locker = new object();
+
+        protected static object _lockerWaitSapace = new object();
+        protected static object _lockerGetNewCar = new object();
+        protected static object _lockerGetNewOrder = new object();
+
         public CarWarehouse(uint capcity, IList<IMediator<ICar>> carMediators = null)
         {
             _capacity = capcity;
@@ -34,26 +38,29 @@ namespace Factory.Core.Warehouse
 
         public void HandleOrder(IDealer dealer)
         {
-            if (_cars.Count > 0 && _cars.TryDequeue(out ICar? car))
+            lock (_lockerGetNewOrder)
             {
-                Console.WriteLine($"CarWarehouse Can Give Car: cars {_cars.Count} left");
-                dealer.TakeCar(car);
-                Console.WriteLine($"CarWarehouse Gave Car: cars {_cars.Count} left");
-                _event.Set();
-                return;
-            }
+                if (_cars.Count > 0 && _cars.TryDequeue(out ICar? car))
+                {
+                    Console.WriteLine($"CarWarehouse Can Give Car: cars {_cars.Count} left");
+                    dealer.TakeCar(car);
+                    Console.WriteLine($"CarWarehouse Gave Car: cars {_cars.Count} left");
+                    _event.Set();
+                    return;
+                }
 
-            Console.WriteLine($"CarWarehouse Empty");
-            _dealers.Enqueue(dealer);
-            Console.WriteLine($"CarWarehouse Queue Add 1: {_dealers.Count} dealers are waiting Car");
+                Console.WriteLine($"CarWarehouse Empty");
+                _dealers.Enqueue(dealer);
+                Console.WriteLine($"CarWarehouse Queue Add 1: {_dealers.Count} dealers are waiting Car");
+            }
         }
 
         public void AddCar(ICar car, int creatorId)
         {
-            lock (_locker)
+            lock (_lockerGetNewCar)
             {
                 _notyfyCount--;
-                Console.WriteLine($"CarWarehouse Got Car From Creator-{creatorId} (notyfyCount = {_notyfyCount})");
+                Console.WriteLine($"CarWarehouse Got Car From Bilder-{creatorId} (notyfyCount = {_notyfyCount})");
                 if (_dealers.Count != 0)
                 {
                     var dealer = _dealers.Dequeue();
@@ -65,18 +72,21 @@ namespace Factory.Core.Warehouse
                     _cars.Enqueue(car);
                     Console.WriteLine($"CarWarehouse Get Car: cars {_cars.Count} left");
                 }
+            }
+            lock (_lockerWaitSapace)
+            {
 
-
-                if (_cars.Count() == _capacity)
+                if (_cars.Count() + _notyfyCount == _capacity)
                 {
                     _event.Reset();
                     Console.WriteLine($"CarWarehouse Is Full: cars {_cars.Count} left");
+                    Console.WriteLine($"CarWarehouse Bulder-{creatorId} Waiting For Start");
                 }
                 _event.WaitOne();
                 _notyfyCount++;
-                Console.WriteLine($"CarWarehouse Notify Bilder-{creatorId} To Bild (notyfyCount = {_notyfyCount}): cars {_cars.Count} left");
-                _carMediators[creatorId].Notify(CreatingStatus.CanCreate);
             }
+            Console.WriteLine($"CarWarehouse Notify Bilder-{creatorId} To Bild (notyfyCount = {_notyfyCount}): cars {_cars.Count} left");
+            _carMediators[creatorId].Notify(CreatingStatus.CanCreate);
         }
 
         public void SetMediator(IMediator<ICar> carMediator)

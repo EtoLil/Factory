@@ -19,7 +19,9 @@ namespace Factory.Core.Warehouse.Base
         protected ManualResetEvent _event;
         protected Task _worker;
 
-        protected static object _locker = new object();
+        protected static object _lockerWaitSapace = new object();
+        protected static object _lockerGetNewDetail = new object();
+        protected static object _lockerGetNewOrder = new object();
 
         public DetailsWarehouse(uint capcity, IList<IMediator<T>> detailsMediators = null)
         {

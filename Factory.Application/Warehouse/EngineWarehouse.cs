@@ -19,23 +19,26 @@ namespace Factory.Core.Warehouse
 
         public override void HandleOrder(ICarDirector carDirector)
         {
-            if (_details.Count > 0 && _details.TryDequeue(out Engine? engine))
+            lock (_lockerGetNewOrder)
             {
-                Console.WriteLine($"EngineWarehouse Can Give Details: deteils {_details.Count} left");
-                carDirector.TakeEngine(engine);
-                Console.WriteLine($"EngineWarehouse Gave Detail: deteils {_details.Count} left");
-                _event.Set();
-                return;
-            }
+                if (_details.Count > 0 && _details.TryDequeue(out Engine? engine))
+                {
+                    Console.WriteLine($"EngineWarehouse Can Give Details: deteils {_details.Count} left");
+                    carDirector.TakeEngine(engine);
+                    Console.WriteLine($"EngineWarehouse Gave Detail: deteils {_details.Count} left");
+                    _event.Set();
+                    return;
+                }
 
-            Console.WriteLine($"EngineWarehouse Empty");
-            _carDirectors.Enqueue(carDirector);
-            Console.WriteLine($"EngineWarehouse Queue Add 1: {_carDirectors.Count} directors are waiting Engine");
+                Console.WriteLine($"EngineWarehouse Empty");
+                _carDirectors.Enqueue(carDirector);
+                Console.WriteLine($"EngineWarehouse Queue Add 1: {_carDirectors.Count} directors are waiting Engine");
+            }
         }
 
         public override void AddDetail(Engine detail, int creatorId)
         {
-            lock (_locker)
+            lock (_lockerGetNewDetail)
             {
                 _notyfyCount--;
                 Console.WriteLine($"EngineWarehouse Got Deteil From Creator-{creatorId} (notyfyCount = {_notyfyCount})");
@@ -51,17 +54,20 @@ namespace Factory.Core.Warehouse
                     _details.Enqueue(detail);
                     Console.WriteLine($"EngineWarehouse Get Details: deteils {_details.Count} left");
                 }
-
-                if (_details.Count() == _capacity)
+            }
+            lock (_lockerWaitSapace)
+            {
+                if (_details.Count()+ _notyfyCount == _capacity)
                 {
                     _event.Reset();
                     Console.WriteLine($"EngineWarehouse Is Full: deteils {_details.Count} left");
+                    Console.WriteLine($"EngineWarehouse Creator-{creatorId} Waiting For Start");
                 }
                 _event.WaitOne();
                 _notyfyCount++;
-                Console.WriteLine($"EngineWarehouse Notify Creator-{creatorId} To Create (notyfyCount = {_notyfyCount}): deteils {_details.Count} left");
-                _detailsMediator[creatorId].Notify(CreatingStatus.CanCreate);
             }
+            Console.WriteLine($"EngineWarehouse Notify Creator-{creatorId} To Create (notyfyCount = {_notyfyCount}): deteils {_details.Count} left");
+            _detailsMediator[creatorId].Notify(CreatingStatus.CanCreate);
         }
 
     }
