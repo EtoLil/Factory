@@ -39,6 +39,7 @@ namespace Factory.Core.Buiders
             Thread.Sleep(Configure.CarFactoriesCreateTime[_id]);
             var car = (ICar)_car.Clone();
             _car=new Car();
+            Console.WriteLine($"CarBulder {_id}: Buld {car}");
             return car;
         }
     }

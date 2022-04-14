@@ -6,7 +6,7 @@ namespace Factory.Core.Interfaces
     public interface IDetailsWarehouse<T>
         where T : class, IDetails
     {
-        void AddDetail(T detail);
+        void AddDetail(T detail, int creatorId);
         void HandleOrder(ICarDirector carBuilder);
         void SetMediator(IMediator<T> detailsMediator);
         void Init();

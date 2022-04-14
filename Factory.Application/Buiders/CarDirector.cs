@@ -21,6 +21,8 @@ namespace Factory.Core.Buiders
         private bool _isBodyReceived;
         private bool _isAccessoriesReceived;
 
+        private int _id;
+
         public CarDirector(
             int id,
             IDetailsWarehouse<Engine> engineWarehouse,
@@ -36,7 +38,7 @@ namespace Factory.Core.Buiders
             _accessoriesWarehouse = accessoriesWarehouse;
 
             _event = new ManualResetEvent(true);
-
+            _id=id;
             _carBulder = new CarBulder(id);
         }
 
@@ -51,7 +53,7 @@ namespace Factory.Core.Buiders
 
         public void TakeEngine(Engine engine)
         {
-            Console.WriteLine($"Pass Engine");
+            Console.WriteLine($"Bulder-{_id} Pass Engine-{engine.Id}");
 
             _carBulder.BuildEngine(engine);
             _isEngineReceived = true;
@@ -60,7 +62,7 @@ namespace Factory.Core.Buiders
 
         public void TakeBody(Body body)
         {
-            Console.WriteLine($"Pass Body");
+            Console.WriteLine($"Bulder-{_id} Pass Body-{body.Id}");
             _carBulder.BuildBody(body);
             _isBodyReceived = true;
             Check();
@@ -68,8 +70,7 @@ namespace Factory.Core.Buiders
 
         public void TakeAccessories(Accessories accessories)
         {
-            Console.WriteLine($"Pass Accessories");
-
+            Console.WriteLine($"Bulder-{_id} Accessories-{accessories.Id}");
             _carBulder.BuildAccessories(accessories);
             _isAccessoriesReceived = true;
             Check();
@@ -77,7 +78,7 @@ namespace Factory.Core.Buiders
 
         public void HandleOrder()
         {
-            Console.WriteLine($"Car: make order");
+            Console.WriteLine($"Director-{_id} Make Order For Details");
 
             _engineWarehouse.HandleOrder(this);
             _bodyWarehouse.HandleOrder(this);
@@ -119,7 +120,8 @@ namespace Factory.Core.Buiders
         {
             var car = _carBulder.GetResult();
             Reset();
-            _carMediator.Notify(CreatingStatus.Created, car);
+            Console.WriteLine($"CarDirector {_id}: Send Car");
+            _carMediator.Notify(CreatingStatus.Created, car, _id);
         }
     }
 }

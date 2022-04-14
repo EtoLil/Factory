@@ -14,8 +14,9 @@ namespace Factory.Core.Creators
 
         public override void Send()
         {
-            var accessories = Create();           
-            _detailsMediator.Notify(CreatingStatus.Created, accessories);
+            var accessories = Create();
+            Console.WriteLine($"AccessoriesCreator {_id}: Create Accessories-{accessories.Id}");
+            _detailsMediator.Notify(CreatingStatus.Created, accessories,_id);
         }
         public override Accessories Create()
         {

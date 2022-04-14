@@ -27,7 +27,7 @@ namespace Factory.Core
             for (int i = 0; i < dealers.Count; i++)
             {
                 Task.Run(() => dealers[i].Run(Configure.DealersRequestTime[i]));
-                Thread.Sleep(100);
+                Thread.Sleep(500);
             }
         }
 

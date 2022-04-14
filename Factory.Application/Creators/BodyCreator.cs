@@ -14,7 +14,8 @@ namespace Factory.Core.Creators
         public override void Send()
         {
             var body = Create();
-            _detailsMediator.Notify(CreatingStatus.Created, body);
+            Console.WriteLine($"BodyCreator {_id}: Create Body-{body.Id}");
+            _detailsMediator.Notify(CreatingStatus.Created, body, _id);
         }
         public override Body Create()
         {

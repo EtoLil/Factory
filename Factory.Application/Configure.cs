@@ -19,18 +19,18 @@
 
         public static int DealersCount = 4;
 
-        public static uint EngineWarehouseCapacity = 5;
-        public static uint BodyWarehouseCapacity = 5;
-        public static uint AccessoriesWarehouseCapacity = 5;
+        public static uint EngineWarehouseCapacity = 7;
+        public static uint BodyWarehouseCapacity = 7;
+        public static uint AccessoriesWarehouseCapacity = 7;
 
-        public static uint CarWarehouseCapacity = 2;
+        public static uint CarWarehouseCapacity = 5;
 
         static Configure()
         {
             EnginesCreateTime = new List<int>();
             for (int i = 0; i < EngineCreatorsCount; i++)
             {
-                EnginesCreateTime.Add(2000);
+                EnginesCreateTime.Add(4000);
             }
             BodiesCreateTime = new List<int>();
             for (int i = 0; i < BodyCreatorsCount; i++)
@@ -40,20 +40,20 @@
             AccessoriesCreateTime = new List<int>();
             for (int i = 0; i < AccessoriesCreatorsCount; i++)
             {
-                AccessoriesCreateTime.Add(4000);
+                AccessoriesCreateTime.Add(2000);
             }
 
             CarFactoriesCreateTime = new List<int>();
             for (int i = 0; i < CarFactoryCount; i++)
             {
-                CarFactoriesCreateTime.Add(10000);
+                CarFactoriesCreateTime.Add(5000);
             }
 
 
             DealersRequestTime = new List<int>();
             for (int i = 0; i < DealersCount; i++)
             {
-                DealersRequestTime.Add(20000);
+                DealersRequestTime.Add(12000);
             }
         }
 

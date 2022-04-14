@@ -11,48 +11,57 @@ namespace Factory.Core.Warehouse
     {
         public EngineWarehouse(
             uint capcity,
-            IMediator<Engine> detailsMediator = null
+            IList<IMediator<Engine>> detailsMediators = null
             )
-            : base(capcity, detailsMediator)
+            : base(capcity, detailsMediators)
         {
         }
 
-        public override void HandleOrder(ICarDirector carBuilder)
+        public override void HandleOrder(ICarDirector carDirector)
         {
-            if (_details.Count > 0)
+            if (_details.Count > 0 && _details.TryDequeue(out Engine? engine))
             {
-                Console.WriteLine($"Warehouse has an engine {_details.Count}");
-
-
-                carBuilder.TakeEngine(_details.Dequeue());
+                Console.WriteLine($"EngineWarehouse Can Give Details: deteils {_details.Count} left");
+                carDirector.TakeEngine(engine);
+                Console.WriteLine($"EngineWarehouse Gave Detail: deteils {_details.Count} left");
                 _event.Set();
                 return;
             }
 
-            Console.WriteLine($"Warehouse has no engine {_details.Count}");
-            _carDirectors.Enqueue(carBuilder);
+            Console.WriteLine($"EngineWarehouse Empty");
+            _carDirectors.Enqueue(carDirector);
+            Console.WriteLine($"EngineWarehouse Queue Add 1: {_carDirectors.Count} directors are waiting Engine");
         }
 
-        public override void AddDetail(Engine detail)
+        public override void AddDetail(Engine detail, int creatorId)
         {
-            if (_carDirectors.Count != 0)
+            lock (_locker)
             {
-                var carBuilder = _carDirectors.Dequeue();
+                _notyfyCount--;
+                Console.WriteLine($"EngineWarehouse Got Deteil From Creator-{creatorId} (notyfyCount = {_notyfyCount})");
+                if (_carDirectors.Count != 0)
+                {
+                    var carBuilder = _carDirectors.Dequeue();
 
-                carBuilder.TakeEngine(detail);
-            }
-            else
-            {
-                _details.Enqueue(detail);
-            }
+                    carBuilder.TakeEngine(detail);
+                    Console.WriteLine($"EngineWarehouse Queue Minus 1: {_carDirectors.Count} dealers are waiting Engine");
+                }
+                else
+                {
+                    _details.Enqueue(detail);
+                    Console.WriteLine($"EngineWarehouse Get Details: deteils {_details.Count} left");
+                }
 
-            if (_details.Count() == _capacity)
-            {
-                _event.Reset();
-                Console.WriteLine($"EngineWarehouse Full {_details.Count}");
+                if (_details.Count() == _capacity)
+                {
+                    _event.Reset();
+                    Console.WriteLine($"EngineWarehouse Is Full: deteils {_details.Count} left");
+                }
+                _event.WaitOne();
+                _notyfyCount++;
+                Console.WriteLine($"EngineWarehouse Notify Creator-{creatorId} To Create (notyfyCount = {_notyfyCount}): deteils {_details.Count} left");
+                _detailsMediator[creatorId].Notify(CreatingStatus.CanCreate);
             }
-            _event.WaitOne();
-            _detailsMediator.Notify(CreatingStatus.CanCreate);
         }
 
     }

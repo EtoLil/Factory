@@ -21,16 +21,14 @@ namespace Factory.Core.Mediators
         }
 
         //TODO: Refactore
-        public void Notify(CreatingStatus @event, ICar? car = null)
+        public void Notify(CreatingStatus @event, ICar? car = null, int creatorId = default)
         {
             switch (@event)
             {
                 case CreatingStatus.Created:
-                    Console.WriteLine($"Car Created");
-                    _carWarehouse.AddCar(car);
+                    _carWarehouse.AddCar(car, creatorId);
                     break;
                 case CreatingStatus.CanCreate:
-                    Console.WriteLine($"Car warehouse not full");
                     _carDirector.HandleOrder();
                     break;
                 case CreatingStatus.CanNotCreate:

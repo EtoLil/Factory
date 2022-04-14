@@ -14,7 +14,8 @@ namespace Factory.Core.Creators
         public override void Send()
         {
             var engine = Create();
-            _detailsMediator.Notify(CreatingStatus.Created, engine);
+            Console.WriteLine($"EngineCreator {_id}: Create Engine-{engine.Id}");
+            _detailsMediator.Notify(CreatingStatus.Created, engine, _id);
         }
         public override Engine Create()
         {

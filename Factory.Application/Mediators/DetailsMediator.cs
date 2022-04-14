@@ -19,16 +19,14 @@ namespace Factory.Core.Mediators
         }
 
         //TODO: Refactore
-        public void Notify(CreatingStatus @event, T? input = null)
+        public void Notify(CreatingStatus @event, T? input = null, int creatorId = default)
         {
             switch (@event)
             {
                 case CreatingStatus.Created:
-                    Console.WriteLine($"{typeof(T).Name} Created");
-                    _detailsWarehouse.AddDetail(input);
+                    _detailsWarehouse.AddDetail(input, creatorId);
                     break;
                 case CreatingStatus.CanCreate:
-                    Console.WriteLine($"{typeof(T).Name} warehouse not full");
                     _detailsCreator.Send();
                     break;
                 case CreatingStatus.CanNotCreate:
