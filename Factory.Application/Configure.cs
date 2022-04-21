@@ -11,13 +11,13 @@
         public static IList<int> DealersRequestTime = new List<int>();
 
 
-        public static int EngineCreatorsCount = 2;
-        public static int BodyCreatorsCount = 2;
-        public static int AccessoriesCreatorsCount = 2;
+        public static int EngineCreatorsCount = 1;
+        public static int BodyCreatorsCount = 1;
+        public static int AccessoriesCreatorsCount = 1;
 
-        public static int CarFactoryCount = 3;
+        public static int CarFactoryCount = 1;
 
-        public static int DealersCount = 4;
+        public static int DealersCount = 2;
 
         public static uint EngineWarehouseCapacity = 7;
         public static uint BodyWarehouseCapacity = 7;

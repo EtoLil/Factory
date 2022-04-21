@@ -15,7 +15,7 @@ namespace Factory.Core.Buiders
 
         private ManualResetEvent _event;
 
-        private ICarBulder _carBulder;
+        private IBuilder _carBulder;
 
         private bool _isEngineReceived;
         private bool _isBodyReceived;
@@ -39,7 +39,7 @@ namespace Factory.Core.Buiders
 
             _event = new ManualResetEvent(true);
             _id=id;
-            _carBulder = new CarBulder(id);
+            _carBulder = new CarBuilder(id);
         }
 
         public void Reset()
@@ -53,25 +53,25 @@ namespace Factory.Core.Buiders
 
         public void TakeEngine(Engine engine)
         {
-            Console.WriteLine($"Bulder-{_id} Pass Engine-{engine.Id}");
+            Console.WriteLine($"Bulder-{_id} Take Engine-{engine.Id}");
 
-            _carBulder.BuildEngine(engine);
+            _carBulder.Engine(engine);
             _isEngineReceived = true;
             Check();
         }
 
         public void TakeBody(Body body)
         {
-            Console.WriteLine($"Bulder-{_id} Pass Body-{body.Id}");
-            _carBulder.BuildBody(body);
+            Console.WriteLine($"Bulder-{_id} Take Body-{body.Id}");
+            _carBulder.Body(body);
             _isBodyReceived = true;
             Check();
         }
 
         public void TakeAccessories(Accessories accessories)
         {
-            Console.WriteLine($"Bulder-{_id} Accessories-{accessories.Id}");
-            _carBulder.BuildAccessories(accessories);
+            Console.WriteLine($"Bulder-{_id} Take Accessories-{accessories.Id}");
+            _carBulder.Accessories(accessories);
             _isAccessoriesReceived = true;
             Check();
         }

@@ -7,11 +7,12 @@ using System.Threading.Tasks;
 
 namespace Factory.Core.Interfaces
 {
-    public interface ICarBulder
+    public interface IBuilder
     {
-        void BuildBody(Body body);
-        void BuildEngine(Engine engine);
-        void BuildAccessories(Accessories accessories);
+        IBuilder Body(Body body);
+        IBuilder Engine(Engine engine);
+        IBuilder Accessories(Accessories accessories);
+        IBuilder Reset();
         ICar GetResult();
     }
 }
