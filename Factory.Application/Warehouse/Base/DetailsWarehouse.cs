@@ -64,5 +64,18 @@ namespace Factory.Core.Warehouse.Base
         {
             _worker.Start();
         }
+
+        public int GetDetailsNumber()
+        {
+            return _details.Count();
+        }
+        public List<T> GetDetailsList()
+        {
+            return _details.ToList();
+        }
+        public List<int> GetOrders()
+        {
+            return _carDirectors.Select(d => d.Id).ToList();
+        }
     }
 }

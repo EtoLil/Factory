@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Factory", "Factory\Factory.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Factory.Core", "Factory.Application\Factory.Core.csproj", "{70F077E6-F0E3-4C25-97EF-CDE46012380C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Factory.ConsoleApp", "Factory.ConsoleApp\Factory.ConsoleApp.csproj", "{9645351B-569B-479A-B795-AAD977E8CCFD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Factory.ConsoleApp", "Factory.ConsoleApp\Factory.ConsoleApp.csproj", "{9645351B-569B-479A-B795-AAD977E8CCFD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

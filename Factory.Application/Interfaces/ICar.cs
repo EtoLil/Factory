@@ -4,8 +4,11 @@ namespace Factory.Core.Interfaces
 {
     public interface ICar : IEntity, ICloneable
     {
-        public void SetEngine(Engine engine);
-        public void SetAccessories(Accessories accessories);
-        public void SetBody(Body body);
+        Engine Engine { get; }
+        Body Body { get; }
+        Accessories Accessories { get; }
+        void SetEngine(Engine engine);
+        void SetAccessories(Accessories accessories);
+        void SetBody(Body body);
     }
 }

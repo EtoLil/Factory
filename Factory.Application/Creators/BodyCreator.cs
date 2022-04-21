@@ -19,7 +19,10 @@ namespace Factory.Core.Creators
         }
         public override Body Create()
         {
+            State = WorkState.Working;
             Thread.Sleep(Configure.BodiesCreateTime[_id]);
+            createdNumber++;
+            State = WorkState.Waiting;
             return new Body();
         }
     }

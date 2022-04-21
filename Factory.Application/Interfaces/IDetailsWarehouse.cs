@@ -11,5 +11,8 @@ namespace Factory.Core.Interfaces
         void SetMediator(IMediator<T> detailsMediator);
         void Init();
         void Run();
+        int GetDetailsNumber();
+        public List<T> GetDetailsList();
+        public List<int> GetOrders();
     }
 }

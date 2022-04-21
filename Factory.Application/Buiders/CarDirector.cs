@@ -22,6 +22,10 @@ namespace Factory.Core.Buiders
         private bool _isAccessoriesReceived;
 
         private int _id;
+        public int Id { get { return _id; } }
+        public WorkState State { get; private set; }
+
+        private int _builtCarNumber = 0;
 
         public CarDirector(
             int id,
@@ -118,10 +122,19 @@ namespace Factory.Core.Buiders
 
         public void Send()
         {
+            State = WorkState.Working;
             var car = _carBulder.GetResult();
             Reset();
+            _builtCarNumber++;
             Console.WriteLine($"CarDirector {_id}: Send Car");
+            State = WorkState.Waiting;
+
             _carMediator.Notify(CreatingStatus.Created, car, _id);
+        }
+
+        public int GetBuiltCarNumber()
+        {
+            return _builtCarNumber;
         }
     }
 }

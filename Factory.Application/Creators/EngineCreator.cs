@@ -19,7 +19,10 @@ namespace Factory.Core.Creators
         }
         public override Engine Create()
         {
+            State = WorkState.Working;
             Thread.Sleep(Configure.EnginesCreateTime[_id]);
+            createdNumber++;
+            State = WorkState.Waiting;
             return new Engine();
         }
     }

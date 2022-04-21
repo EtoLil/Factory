@@ -20,7 +20,10 @@ namespace Factory.Core.Creators
         }
         public override Accessories Create()
         {
+            State = WorkState.Working;
             Thread.Sleep(Configure.AccessoriesCreateTime[_id]);
+            createdNumber++;
+            State = WorkState.Waiting;
             return new Accessories();
         }
     }

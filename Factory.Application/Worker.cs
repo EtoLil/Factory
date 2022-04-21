@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace Factory.Core
 {
-    public class Worker
+    public class Worker : IWorker
     {
         public IDetailsWarehouse<Engine> EngineWarehouse { get; set; }
         public IDetailsWarehouse<Body> BodyWarehouse { get; set; }
@@ -31,7 +31,7 @@ namespace Factory.Core
 
         public IList<IMediator<ICar>> CarMediators { get; set; }
 
-        public IDealerCommunity DealerCommunity { get; set; }
+        public IList<IDealer> Dealers { get; set; }
 
         private bool _isInited;
 
@@ -43,31 +43,37 @@ namespace Factory.Core
         public void Init()
         {
             EngineWarehouse = new EngineWarehouse(Configure.EngineWarehouseCapacity);
-            BodyWarehouse=new BodyWarehouse(Configure.BodyWarehouseCapacity);
-            AccessoriesWarehouse=new AccessoriesWarehouse(Configure.AccessoriesWarehouseCapacity);  
+            BodyWarehouse = new BodyWarehouse(Configure.BodyWarehouseCapacity);
+            AccessoriesWarehouse = new AccessoriesWarehouse(Configure.AccessoriesWarehouseCapacity);
 
-            CarWarehouse=new CarWarehouse(Configure.CarWarehouseCapacity);
+            CarWarehouse = new CarWarehouse(Configure.CarWarehouseCapacity);
 
-            EngineCreators=new List<IDetailsCreator<Engine>>();
-            EngineMediators=new List<IMediator<Engine>>();
+            EngineCreators = new List<IDetailsCreator<Engine>>();
+            EngineMediators = new List<IMediator<Engine>>();
+            Configure.EnginesCreateTime = new List<int>();
             for (int i = 0; i < Configure.EngineCreatorsCount; i++)
             {
+                Configure.EnginesCreateTime.Add(5000);
                 EngineCreators.Add(new EngineCreator(i));
                 EngineMediators.Add(new DetailsMediator<Engine>(EngineWarehouse, EngineCreators[i]));
             }
 
             BodyCreators = new List<IDetailsCreator<Body>>();
-            BodyMediators= new List<IMediator<Body>>();
+            BodyMediators = new List<IMediator<Body>>();
+            Configure.BodiesCreateTime = new List<int>();
             for (int i = 0; i < Configure.BodyCreatorsCount; i++)
             {
+                Configure.BodiesCreateTime.Add(5000);
                 BodyCreators.Add(new BodyCreator(i));
                 BodyMediators.Add(new DetailsMediator<Body>(BodyWarehouse, BodyCreators[i]));
             }
 
             AccessoriesCreators = new List<IDetailsCreator<Accessories>>();
             AccessoriesMediators = new List<IMediator<Accessories>>();
+            Configure.AccessoriesCreateTime = new List<int>();
             for (int i = 0; i < Configure.AccessoriesCreatorsCount; i++)
             {
+                Configure.AccessoriesCreateTime.Add(5000);
                 AccessoriesCreators.Add(new AccessoriesCreator(i));
                 AccessoriesMediators.Add(new DetailsMediator<Accessories>(AccessoriesWarehouse, AccessoriesCreators[i]));
             }
@@ -75,13 +81,20 @@ namespace Factory.Core
 
             CarDirectors = new List<ICarDirector>();
             CarMediators = new List<IMediator<ICar>>();
+            Configure.CarFactoriesCreateTime = new List<int>();
             for (int i = 0; i < Configure.CarFactoryCount; i++)
             {
+                Configure.CarFactoriesCreateTime.Add(5000);
                 CarDirectors.Add(new CarDirector(i, EngineWarehouse, BodyWarehouse, AccessoriesWarehouse));
                 CarMediators.Add(new CarMediator(CarWarehouse, CarDirectors[i]));
             }
 
-            DealerCommunity = new DealerCommunity(CarWarehouse);
+            Dealers = new List<IDealer>();
+            for (int i = 0; i < Configure.DealersCount; i++)
+            {
+                Dealers.Add(new Dealer(CarWarehouse,i));
+                Configure.DealersRequestTime.Add(5000);
+            }
 
             _isInited = true;
         }
@@ -95,8 +108,62 @@ namespace Factory.Core
 
                 CarWarehouse.Run();
 
-                DealerCommunity.Run();
+                for (int i = 0; i < Configure.DealersCount; i++)
+                {
+                    Dealers[i].Run();
+                }
             }
+        }
+
+        public State GetState()
+        {
+            if (!_isInited)
+            {
+                return null;
+            }
+
+            var state = new State();
+
+            state.WarehouseEnginesNumbers = EngineWarehouse.GetDetailsNumber();
+            state.EngineWarehouseQueue = EngineWarehouse.GetOrders();
+            state.WarehouseEngines = EngineWarehouse.GetDetailsList();
+
+            state.WarehouseAccessoriesNumbers = AccessoriesWarehouse.GetDetailsNumber();
+            state.AccessoriesWarehouseQueue = AccessoriesWarehouse.GetOrders();
+            state.WarehouseAccessories = AccessoriesWarehouse.GetDetailsList();
+
+            state.WarehouseBodiesNumbers = BodyWarehouse.GetDetailsNumber();
+            state.BodyWarehouseQueue = BodyWarehouse.GetOrders();
+            state.WarehouseBodies = BodyWarehouse.GetDetailsList();
+
+            state.WarehouseCarsNumbers = CarWarehouse.GetCarsNumber();
+            state.CarWarehouseQueue = CarWarehouse.GetOrders();
+            state.WarehouseCars = CarWarehouse.GetCarsList();
+
+            foreach (var creator in EngineCreators)
+            {
+                state.EngineCreatorsWorkStates.Add(creator.State);
+                state.EngineCreatedNumbers.Add(creator.GetCreatedNumber());
+            }
+            foreach (var creator in AccessoriesCreators)
+            {
+                state.AccessoriesCreatorsWorkStates.Add(creator.State);
+                state.AccessoriesCreatedNumbers.Add(creator.GetCreatedNumber());
+            }
+            foreach (var creator in BodyCreators)
+            {
+                state.BodyCreatorsWorkStates.Add(creator.State);
+                state.BodyCreatedNumbers.Add(creator.GetCreatedNumber());
+            }
+            foreach (var director in CarDirectors)
+            {
+                state.CarBuilderWorkStates.Add(director.State);
+                state.CarBuiltNumbers.Add(director.GetBuiltCarNumber());
+            }
+
+            state.Dealers = Dealers;
+
+            return state;
         }
     }
 }

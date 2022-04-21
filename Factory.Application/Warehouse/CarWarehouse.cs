@@ -111,5 +111,20 @@ namespace Factory.Core.Warehouse
         {
             _worker.Start();
         }
+
+        public int GetCarsNumber()
+        {
+            return _cars.Count();
+        }
+
+        public List<Car> GetCarsList()
+        {
+            return _cars.Select(car=>(Car)car).ToList();
+        }
+
+        public List<string> GetOrders()
+        {
+            return _dealers.Select(d => d.Id.ToString()).ToList();
+        }
     }
 }

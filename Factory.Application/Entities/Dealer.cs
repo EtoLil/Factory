@@ -8,17 +8,20 @@ namespace Factory.Core.Entities
     {
         private ICarWarehouse _carWarehouse;
 
-        public IList<ICar> Cars { get; set; }
-
-        public Dealer(ICarWarehouse carWarehouse) : base()
+        public IList<Car> Cars { get; set; }
+        private Task _worker;
+        private int _index;
+        public Dealer(ICarWarehouse carWarehouse, int index) : base()
         {
             _carWarehouse = carWarehouse;
-            Cars = new List<ICar>();
+            Cars = new List<Car>();
+            _index=index;
+            _worker = new Task(Start);
         }
 
         public void TakeCar(ICar car)
         {
-            Cars.Add(car);
+            Cars.Add((Car)car);
             Console.WriteLine($"Dealer: {Id} Received Car {car.Id}");
             var str = "";
             foreach (ICar car2 in Cars)
@@ -29,14 +32,18 @@ namespace Factory.Core.Entities
 
         }
 
-        public void Run(int dealerRequestTime)
+        public void Run()
         {
-            Timer timer = new Timer(new TimerCallback(Start), null, 0, dealerRequestTime);
+            _worker.Start();
         }
 
-        private void Start(object? obj)
+        private void Start()
         {
-            _carWarehouse.HandleOrder(this);
+            while (true)
+            {
+                Thread.Sleep(Configure.DealersRequestTime[_index]);
+                _carWarehouse.HandleOrder(this);
+            }
         }
     }
 }
