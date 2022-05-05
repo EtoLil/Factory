@@ -53,7 +53,10 @@ namespace Factory.Core.Warehouse
                     Console.WriteLine($"CarWarehouse Can Give Car: cars {_cars.Count} left");
                     dealer.TakeCar(car);
                     Console.WriteLine($"CarWarehouse Gave Car: cars {_cars.Count} left");
-                    _event.Set();
+                    if (_cars.Count() + _notyfyCount < _capacity)
+                    {
+                        _event.Set();
+                    }
                     return;
                 }
 
@@ -65,10 +68,11 @@ namespace Factory.Core.Warehouse
 
         public void AddCar(ICar car, int creatorId)
         {
+            _notyfyCount--;
+            Console.WriteLine($"CarWarehouse Got Car From Bilder-{creatorId} (notyfyCount = {_notyfyCount})");
             lock (_lockerGetNewCar)
             {
-                _notyfyCount--;
-                Console.WriteLine($"CarWarehouse Got Car From Bilder-{creatorId} (notyfyCount = {_notyfyCount})");
+
                 if (_dealers.Count != 0)
                 {
                     var dealer = _dealers.Dequeue();
@@ -88,7 +92,7 @@ namespace Factory.Core.Warehouse
                     Console.WriteLine($"CarWarehouse token.IsCancellationRequested from car factory {creatorId}");
                     _token.ThrowIfCancellationRequested();
                 }
-                if (_cars.Count() + _notyfyCount == _capacity)
+                if (_cars.Count() + _notyfyCount >= _capacity)
                 {
                     _event.Reset();
                     Console.WriteLine($"CarWarehouse Is Full: cars {_cars.Count} left");

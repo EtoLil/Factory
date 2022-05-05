@@ -28,7 +28,10 @@ namespace Factory.Core.Warehouse
                     Console.WriteLine($"AccessoriesWarehouse Can Give Details: deteils {_details.Count} left");
                     carDirector.TakeAccessories(accessories);
                     Console.WriteLine($"AccessoriesWarehouse Gave Detail: deteils {_details.Count} left");
-                    _event.Set();
+                    if (_details.Count() + _notyfyCount < _capacity)
+                    {
+                        _event.Set();
+                    }
                     return;
                 }
 
@@ -40,10 +43,11 @@ namespace Factory.Core.Warehouse
 
         public override void AddDetail(Accessories detail, int creatorId)
         {
+            _notyfyCount--;
+            Console.WriteLine($"AccessoriesWarehouse Got Deteil From Creator-{creatorId} (notyfyCount = {_notyfyCount})");
+
             lock (_lockerGetNewDetail)
             {
-                _notyfyCount--;
-                Console.WriteLine($"AccessoriesWarehouse Got Deteil From Creator-{creatorId} (notyfyCount = {_notyfyCount})");
                 if (_carDirectors.Count != 0)
                 {
                     var carBuilder = _carDirectors.Dequeue();
@@ -64,7 +68,7 @@ namespace Factory.Core.Warehouse
                     Console.WriteLine($"AccessoriesWarehouse token.IsCancellationRequested from detail creator {creatorId}");
                     _token.ThrowIfCancellationRequested();
                 }
-                if (_notyfyCount + _details.Count() == _capacity)
+                if (_notyfyCount + _details.Count() >= _capacity)
                 {
                     _event.Reset();
                     Console.WriteLine($"AccessoriesWarehouse Is Full: deteils {_details.Count} left");
