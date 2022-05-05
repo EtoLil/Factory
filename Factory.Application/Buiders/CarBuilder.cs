@@ -20,6 +20,7 @@ namespace Factory.Core.Buiders
         public CarBuilder(int id, CancellationToken token = default)
         {
             _id = id;
+            _token = token;
         }
 
         public IBuilder Accessories(Accessories accessories)

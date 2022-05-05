@@ -17,7 +17,7 @@ namespace Factory.Core.Entities
             _token = token;
             _carWarehouse = carWarehouse;
             Cars = new List<Car>();
-            _index=index;
+            _index = index;
             _worker = new Task(Start);
         }
 
@@ -35,31 +35,31 @@ namespace Factory.Core.Entities
         }
 
         public void Run()
-        {
-            try
-            {
-                _worker.Start();
-            }
-            catch (OperationCanceledException ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
+        { 
+            _worker.Start();
         }
 
         private void Start()
         {
-            while (true)
+            try
             {
-                if (_token.IsCancellationRequested)
+                while (true)
                 {
-                    Console.WriteLine($"Dealer {Id} token.IsCancellationRequested");
-                    _token.ThrowIfCancellationRequested();
+                    if (_token.IsCancellationRequested)
+                    {
+                        Console.WriteLine($"Dealer {Id} token.IsCancellationRequested");
+                        _token.ThrowIfCancellationRequested();
+                    }
+                    else
+                    {
+                        Thread.Sleep(Configure.DealersRequestTime[_index]);
+                        _carWarehouse.HandleOrder(this);
+                    }
                 }
-                else
-                {
-                    Thread.Sleep(Configure.DealersRequestTime[_index]);
-                }
-                _carWarehouse.HandleOrder(this);
+            }
+            catch (OperationCanceledException ex)
+            {
+                Console.WriteLine(ex.Message);
             }
         }
     }

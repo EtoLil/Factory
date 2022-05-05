@@ -98,14 +98,14 @@ namespace Factory.Core
             for (int i = 0; i < Configure.CarFactoryCount; i++)
             {
                 Configure.CarFactoriesCreateTime.Add(5000);
-                CarDirectors.Add(new CarDirector(i, EngineWarehouse, BodyWarehouse, AccessoriesWarehouse));
+                CarDirectors.Add(new CarDirector(i, EngineWarehouse, BodyWarehouse, AccessoriesWarehouse, token: _cancellationTokenSource.Token));
                 CarMediators.Add(new CarMediator(CarWarehouse, CarDirectors[i]));
             }
 
             Dealers = new List<IDealer>();
             for (int i = 0; i < Configure.DealersCount; i++)
             {
-                Dealers.Add(new Dealer(CarWarehouse, i));
+                Dealers.Add(new Dealer(CarWarehouse, i, _cancellationTokenSource.Token));
                 Configure.DealersRequestTime.Add(5000);
             }
 
