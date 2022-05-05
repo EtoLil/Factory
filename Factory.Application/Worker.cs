@@ -55,11 +55,11 @@ namespace Factory.Core
 
             _cancellationTokenSource = new CancellationTokenSource();
 
-            EngineWarehouse = new EngineWarehouse(Configure.EngineWarehouseCapacity);
-            BodyWarehouse = new BodyWarehouse(Configure.BodyWarehouseCapacity);
-            AccessoriesWarehouse = new AccessoriesWarehouse(Configure.AccessoriesWarehouseCapacity);
+            EngineWarehouse = new EngineWarehouse(Configure.EngineWarehouseCapacity, token: _cancellationTokenSource.Token);
+            BodyWarehouse = new BodyWarehouse(Configure.BodyWarehouseCapacity, token: _cancellationTokenSource.Token);
+            AccessoriesWarehouse = new AccessoriesWarehouse(Configure.AccessoriesWarehouseCapacity, token: _cancellationTokenSource.Token);
 
-            CarWarehouse = new CarWarehouse(Configure.CarWarehouseCapacity);
+            CarWarehouse = new CarWarehouse(Configure.CarWarehouseCapacity, token: _cancellationTokenSource.Token);
 
             EngineCreators = new List<IDetailsCreator<Engine>>();
             EngineMediators = new List<IMediator<Engine>>();
