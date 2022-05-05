@@ -4,7 +4,7 @@ using Factory.Core.Interfaces;
 namespace Factory.Core.Mediators
 {
     public class DetailsMediator<T> : IMediator<T>
-        where T : class, IDetails
+        where T : class, IDetail
     {
         private IDetailsWarehouse<T> _detailsWarehouse;
 
@@ -24,10 +24,24 @@ namespace Factory.Core.Mediators
             switch (@event)
             {
                 case CreatingStatus.Created:
-                    _detailsWarehouse.AddDetail(input, creatorId);
+                    try
+                    {
+                        _detailsWarehouse.AddDetail(input, creatorId);
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex.Message);
+                    }
                     break;
                 case CreatingStatus.CanCreate:
-                    _detailsCreator.Send();
+                    try
+                    {
+                        _detailsCreator.Send();
+                    }
+                    catch (OperationCanceledException ex)
+                    {
+                        Console.WriteLine(ex.Message);
+                    }
                     break;
                 case CreatingStatus.CanNotCreate:
                     break;

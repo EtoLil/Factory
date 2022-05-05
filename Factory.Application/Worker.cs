@@ -34,14 +34,27 @@ namespace Factory.Core
         public IList<IDealer> Dealers { get; set; }
 
         private bool _isInited;
+        private CancellationTokenSource _cancellationTokenSource;
 
         public Worker()
         {
             _isInited = false;
+            _cancellationTokenSource = new CancellationTokenSource();
         }
 
         public void Init()
         {
+
+            _cancellationTokenSource.Cancel();
+            _cancellationTokenSource.Dispose();
+
+            EngineWarehouse?.ContinueManualResetEvent();
+            AccessoriesWarehouse?.ContinueManualResetEvent();
+            BodyWarehouse?.ContinueManualResetEvent();
+            CarWarehouse?.ContinueManualResetEvent();
+
+            _cancellationTokenSource = new CancellationTokenSource();
+
             EngineWarehouse = new EngineWarehouse(Configure.EngineWarehouseCapacity);
             BodyWarehouse = new BodyWarehouse(Configure.BodyWarehouseCapacity);
             AccessoriesWarehouse = new AccessoriesWarehouse(Configure.AccessoriesWarehouseCapacity);
@@ -54,7 +67,7 @@ namespace Factory.Core
             for (int i = 0; i < Configure.EngineCreatorsCount; i++)
             {
                 Configure.EnginesCreateTime.Add(5000);
-                EngineCreators.Add(new EngineCreator(i));
+                EngineCreators.Add(new EngineCreator(id: i, token: _cancellationTokenSource.Token));
                 EngineMediators.Add(new DetailsMediator<Engine>(EngineWarehouse, EngineCreators[i]));
             }
 
@@ -64,7 +77,7 @@ namespace Factory.Core
             for (int i = 0; i < Configure.BodyCreatorsCount; i++)
             {
                 Configure.BodiesCreateTime.Add(5000);
-                BodyCreators.Add(new BodyCreator(i));
+                BodyCreators.Add(new BodyCreator(id: i, token: _cancellationTokenSource.Token));
                 BodyMediators.Add(new DetailsMediator<Body>(BodyWarehouse, BodyCreators[i]));
             }
 
@@ -74,7 +87,7 @@ namespace Factory.Core
             for (int i = 0; i < Configure.AccessoriesCreatorsCount; i++)
             {
                 Configure.AccessoriesCreateTime.Add(5000);
-                AccessoriesCreators.Add(new AccessoriesCreator(i));
+                AccessoriesCreators.Add(new AccessoriesCreator(id: i, token: _cancellationTokenSource.Token));
                 AccessoriesMediators.Add(new DetailsMediator<Accessories>(AccessoriesWarehouse, AccessoriesCreators[i]));
             }
 
@@ -92,7 +105,7 @@ namespace Factory.Core
             Dealers = new List<IDealer>();
             for (int i = 0; i < Configure.DealersCount; i++)
             {
-                Dealers.Add(new Dealer(CarWarehouse,i));
+                Dealers.Add(new Dealer(CarWarehouse, i));
                 Configure.DealersRequestTime.Add(5000);
             }
 

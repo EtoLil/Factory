@@ -7,7 +7,7 @@ namespace Factory.Core.Creators
 {
     public class AccessoriesCreator : BaseDetailsCreator<Accessories>
     {
-        public AccessoriesCreator(int id, IMediator<Accessories> detailsMediator = null):base(detailsMediator)
+        public AccessoriesCreator(int id, IMediator<Accessories> detailsMediator = null, CancellationToken token = default) :base(detailsMediator, token)
         {
             _id = id;
         }
@@ -21,7 +21,15 @@ namespace Factory.Core.Creators
         public override Accessories Create()
         {
             State = WorkState.Working;
-            Thread.Sleep(Configure.AccessoriesCreateTime[_id]);
+            if (_token.IsCancellationRequested)
+            {
+                Console.WriteLine($"AccessoriesCreator Creator {_id} token.IsCancellationRequested");
+                _token.ThrowIfCancellationRequested();
+            }
+            else
+            {
+                Thread.Sleep(Configure.AccessoriesCreateTime[_id]);
+            }
             createdNumber++;
             State = WorkState.Waiting;
             return new Accessories();

@@ -11,9 +11,8 @@ namespace Factory.Core.Warehouse
     {
         public BodyWarehouse(
             uint capcity,
-            IList<IMediator<Body>> detailsMediators = null
-            )
-            : base(capcity, detailsMediators)
+            IList<IMediator<Body>> detailsMediators = null, CancellationToken token = default)
+            : base(capcity, detailsMediators, token)
         {
         }
 
@@ -21,6 +20,11 @@ namespace Factory.Core.Warehouse
         {
             lock (_lockerGetNewOrder)
             {
+                if (_token.IsCancellationRequested)
+                {
+                    Console.WriteLine($"BodyWarehouse token.IsCancellationRequested from car Director {carDirector.Id}");
+                    _token.ThrowIfCancellationRequested();
+                }
                 if (_details.Count > 0 && _details.TryDequeue(out Body? body))
                 {
                     Console.WriteLine($"BodyWarehouse Can Give Details: deteils {_details.Count} left");
@@ -57,7 +61,11 @@ namespace Factory.Core.Warehouse
             }
             lock (_lockerWaitSapace)
             {
-
+                if (_token.IsCancellationRequested)
+                {
+                    Console.WriteLine($"BodyWarehouse token.IsCancellationRequested from detail creator {creatorId}");
+                    _token.ThrowIfCancellationRequested();
+                }
                 if (_details.Count()+ _notyfyCount == _capacity)
                 {
                     _event.Reset();

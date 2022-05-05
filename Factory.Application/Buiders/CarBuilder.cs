@@ -15,8 +15,9 @@ namespace Factory.Core.Buiders
         private Engine? _engine;
         private Accessories? _accessories;
         private Body? _body;
+        protected CancellationToken _token;
 
-        public CarBuilder(int id)
+        public CarBuilder(int id, CancellationToken token = default)
         {
             _id = id;
         }
@@ -47,7 +48,15 @@ namespace Factory.Core.Buiders
         }
         public ICar GetResult()
         {
-            Thread.Sleep(Configure.CarFactoriesCreateTime[_id]);
+            if (_token.IsCancellationRequested)
+            {
+                Console.WriteLine($"Car builder {_id} token.IsCancellationRequested");
+                _token.ThrowIfCancellationRequested();
+            }
+            else
+            {
+                Thread.Sleep(Configure.CarFactoriesCreateTime[_id]);
+            }
             var car = new Car(_engine, _body,_accessories);
             Reset();
             Console.WriteLine($"CarBulder {_id}: Buld {car}");

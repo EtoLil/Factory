@@ -11,7 +11,8 @@ namespace Factory.Core.Interfaces
         void Init();
         void Run();
         int GetCarsNumber();
-        public List<Car> GetCarsList();
-        public List<string> GetOrders();
+        List<Car> GetCarsList();
+        List<string> GetOrders();
+        void ContinueManualResetEvent();
     }
 }

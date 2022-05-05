@@ -3,7 +3,7 @@ using Factory.Core.Interfaces;
 
 namespace Factory.Core.Entities
 {
-    public class Body : BaseEntity, IDetails
+    public class Body : BaseEntity, IDetail
     {
         public Body() : base() { }
     }

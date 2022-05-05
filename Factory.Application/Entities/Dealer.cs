@@ -11,8 +11,10 @@ namespace Factory.Core.Entities
         public IList<Car> Cars { get; set; }
         private Task _worker;
         private int _index;
-        public Dealer(ICarWarehouse carWarehouse, int index) : base()
+        private CancellationToken _token;
+        public Dealer(ICarWarehouse carWarehouse, int index, CancellationToken token = default) : base()
         {
+            _token = token;
             _carWarehouse = carWarehouse;
             Cars = new List<Car>();
             _index=index;
@@ -34,14 +36,29 @@ namespace Factory.Core.Entities
 
         public void Run()
         {
-            _worker.Start();
+            try
+            {
+                _worker.Start();
+            }
+            catch (OperationCanceledException ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
         }
 
         private void Start()
         {
             while (true)
             {
-                Thread.Sleep(Configure.DealersRequestTime[_index]);
+                if (_token.IsCancellationRequested)
+                {
+                    Console.WriteLine($"Dealer {Id} token.IsCancellationRequested");
+                    _token.ThrowIfCancellationRequested();
+                }
+                else
+                {
+                    Thread.Sleep(Configure.DealersRequestTime[_index]);
+                }
                 _carWarehouse.HandleOrder(this);
             }
         }

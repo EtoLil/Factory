@@ -26,10 +26,24 @@ namespace Factory.Core.Mediators
             switch (@event)
             {
                 case CreatingStatus.Created:
-                    _carWarehouse.AddCar(car, creatorId);
+                    try
+                    {
+                        _carWarehouse.AddCar(car, creatorId);
+                    }
+                    catch (OperationCanceledException ex)
+                    {
+                        Console.WriteLine(ex.Message);
+                    }
                     break;
                 case CreatingStatus.CanCreate:
-                    _carDirector.HandleOrder();
+                    try
+                    {
+                        _carDirector.HandleOrder();
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex.Message);
+                    }
                     break;
                 case CreatingStatus.CanNotCreate:
                     break;

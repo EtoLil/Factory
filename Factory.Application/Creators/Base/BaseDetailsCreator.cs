@@ -5,15 +5,17 @@ using Factory.Core.Mediators;
 namespace Factory.Core.Creators.Base
 {
     public abstract class BaseDetailsCreator<T> : IDetailsCreator<T>
-        where T : class, IDetails
+        where T : class, IDetail
     {
         public WorkState State { get; protected set; } = WorkState.Waiting;
         protected IMediator<T> _detailsMediator;
         protected int _id;
         protected int createdNumber = 0;
-        public BaseDetailsCreator(IMediator<T> detailsMediator = null)
+        protected CancellationToken _token;
+        public BaseDetailsCreator(IMediator<T> detailsMediator = null, CancellationToken token = default)
         {
             _detailsMediator = detailsMediator;
+            _token = token;
         }
 
         public abstract void Send();

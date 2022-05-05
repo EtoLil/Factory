@@ -22,8 +22,11 @@ namespace Factory.Core.Warehouse
         protected static object _lockerGetNewCar = new object();
         protected static object _lockerGetNewOrder = new object();
 
-        public CarWarehouse(uint capcity, IList<IMediator<ICar>> carMediators = null)
+        protected CancellationToken _token;
+
+        public CarWarehouse(uint capcity, IList<IMediator<ICar>> carMediators = null, CancellationToken token = default)
         {
+            _token = token;
             _capacity = capcity;
             _carMediators = carMediators;
             _cars = new ConcurrentQueue<ICar>();
@@ -40,6 +43,11 @@ namespace Factory.Core.Warehouse
         {
             lock (_lockerGetNewOrder)
             {
+                if (_token.IsCancellationRequested)
+                {
+                    Console.WriteLine($"CarWarehouse token.IsCancellationRequested from dealer {dealer.Id}");
+                    _token.ThrowIfCancellationRequested();
+                }
                 if (_cars.Count > 0 && _cars.TryDequeue(out ICar? car))
                 {
                     Console.WriteLine($"CarWarehouse Can Give Car: cars {_cars.Count} left");
@@ -75,7 +83,11 @@ namespace Factory.Core.Warehouse
             }
             lock (_lockerWaitSapace)
             {
-
+                if (_token.IsCancellationRequested)
+                {
+                    Console.WriteLine($"CarWarehouse token.IsCancellationRequested from car factory {creatorId}");
+                    _token.ThrowIfCancellationRequested();
+                }
                 if (_cars.Count() + _notyfyCount == _capacity)
                 {
                     _event.Reset();
@@ -85,6 +97,7 @@ namespace Factory.Core.Warehouse
                 _event.WaitOne();
                 _notyfyCount++;
             }
+
             Console.WriteLine($"CarWarehouse Notify Bilder-{creatorId} To Bild (notyfyCount = {_notyfyCount}): cars {_cars.Count} left");
             _carMediators[creatorId].Notify(CreatingStatus.CanCreate);
         }
@@ -119,12 +132,17 @@ namespace Factory.Core.Warehouse
 
         public List<Car> GetCarsList()
         {
-            return _cars.Select(car=>(Car)car).ToList();
+            return _cars.Select(car => (Car)car).ToList();
         }
 
         public List<string> GetOrders()
         {
             return _dealers.Select(d => d.Id.ToString()).ToList();
+        }
+
+        public void ContinueManualResetEvent()
+        {
+            _event.Set();
         }
     }
 }

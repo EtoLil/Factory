@@ -7,7 +7,7 @@ namespace Factory.Core.Creators
 {
     public class BodyCreator : BaseDetailsCreator<Body>
     {
-        public BodyCreator(int id, IMediator<Body> detailsMediator = null) : base(detailsMediator)
+        public BodyCreator(int id, IMediator<Body> detailsMediator = null,CancellationToken token = default) : base(detailsMediator, token)
         {
             _id = id;
         }
@@ -20,7 +20,15 @@ namespace Factory.Core.Creators
         public override Body Create()
         {
             State = WorkState.Working;
-            Thread.Sleep(Configure.BodiesCreateTime[_id]);
+            if (_token.IsCancellationRequested)
+            {
+                Console.WriteLine($"AccessoriesCreator Creator {_id} token.IsCancellationRequested");
+                _token.ThrowIfCancellationRequested();
+            }
+            else
+            {
+                Thread.Sleep(Configure.BodiesCreateTime[_id]);
+            }
             createdNumber++;
             State = WorkState.Waiting;
             return new Body();

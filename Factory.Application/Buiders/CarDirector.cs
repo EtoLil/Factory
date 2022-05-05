@@ -23,7 +23,7 @@ namespace Factory.Core.Buiders
 
         private int _id;
         public int Id { get { return _id; } }
-        public WorkState State { get; private set; }
+        public WorkState State { get; private set; } = WorkState.Waiting;
 
         private int _builtCarNumber = 0;
 
@@ -32,7 +32,8 @@ namespace Factory.Core.Buiders
             IDetailsWarehouse<Engine> engineWarehouse,
             IDetailsWarehouse<Body> bodyWarehouse,
             IDetailsWarehouse<Accessories> accessoriesWarehouse,
-            IMediator<ICar> carMediator = null
+            IMediator<ICar> carMediator = null,
+            CancellationToken token = default
             )
         {
             _carMediator = carMediator;
@@ -43,7 +44,7 @@ namespace Factory.Core.Buiders
 
             _event = new ManualResetEvent(true);
             _id=id;
-            _carBulder = new CarBuilder(id);
+            _carBulder = new CarBuilder(id, token);
         }
 
         public void Reset()
